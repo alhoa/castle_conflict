@@ -253,14 +253,6 @@ class GUI(QtWidgets.QMainWindow):
 		next_turn_btn.clicked.connect(lambda: self.parse_trigger("End turn"))
 		self.button_group.addWidget(next_turn_btn, 0,0,1,1)
 
-		"""
-		move_icon = QtGui.QIcon(QtGui.QPixmap("graphics/move_icon.png"))	
-		move_btn = QtWidgets.QPushButton(move_icon,"")
-		move_btn.setIconSize(QtCore.QSize(50,50))
-		move_btn.setToolTip("Move")
-		move_btn.clicked.connect(lambda: self.parse_trigger("Move"))
-		self.button_group.addWidget(move_btn, 1,0,1,1)
-		"""
 		self.buttons.append(next_turn_btn)
 		#self.buttons.append(move_btn)
 
@@ -606,7 +598,7 @@ class GUI(QtWidgets.QMainWindow):
 						char = self.game.get_current_character()
 						coords = tilegraph.get_tile().get_coordinates()
 						char.move(coords)
-						#self.state = None  #Uncomment to remove default moving
+
 					else:
 						tilegraph.update_color((0,100,0))
 						self.update_log("Pressed tile:" + str(tilegraph.get_tile().get_coordinates()))
