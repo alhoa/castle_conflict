@@ -1,0 +1,5 @@
+Bite
+
+cost : 3
+range : 1
+damage : 6 : 3

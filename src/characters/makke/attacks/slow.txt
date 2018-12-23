@@ -1,0 +1,6 @@
+Slow
+
+cost : 2
+range : 6
+damage : 2 : 1
+AP : -2

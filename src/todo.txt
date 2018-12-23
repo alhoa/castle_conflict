@@ -1,0 +1,17 @@
+Default to move mode
+
+move between games
+
+autosave after every game
+
+player levels
+	- level affects unlocked attacks
+	- attcks have levels too?
+
+#save files, which contain more than one game
+
+player stats?
+player levels
+player items?
+
+indicators for losing/gaining ap/mp

@@ -1,0 +1,6 @@
+Accelerate
+
+cost : 3
+range : 2
+damage : 0 : 0
+AP : 2

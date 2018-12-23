@@ -1,0 +1,43 @@
+CC save
+
+#
+Information
+
+index : 0
+
+/#
+
+#
+Comments
+
+test file which is a new save
+/#
+
+#
+Games
+
+name : volcano_game
+name : beach_game
+name : forest_game
+
+/#
+
+#
+Player
+name : Makke
+hp : 80
+ap : 7
+mp : 4
+init : 100
+level : 1
+/#
+
+#
+Player
+name : Mikko
+hp : 70
+ap : 8
+mp : 3
+init : 120
+level : 0
+/#

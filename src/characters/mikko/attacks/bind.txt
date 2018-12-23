@@ -1,0 +1,6 @@
+Bind
+
+cost : 3
+range : 8
+damage : 2 : 2
+mp : -2

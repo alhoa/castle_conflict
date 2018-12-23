@@ -1,0 +1,5 @@
+Punch
+
+cost : 4
+range : 1
+damage : 8 : 4

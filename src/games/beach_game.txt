@@ -1,0 +1,40 @@
+CC game
+
+#
+Information
+
+map : beach
+/#
+
+#
+Comments
+
+test file which is a new save
+/#
+
+#
+Enemy : ranger
+name : Skeleton
+hp : 40
+ap : 6
+mp : 4
+init : 150
+/#
+
+#
+Enemy : runner
+name : Spider
+hp : 30
+ap : 4
+mp : 7
+init : 60
+/#
+
+#
+Enemy : brute
+name : Shade
+hp : 60
+ap : 7
+mp : 3
+init : 80
+/#

@@ -1,0 +1,40 @@
+CC save
+
+#
+Information
+
+initialized : 0
+map : beach
+/#
+
+#
+Comments
+
+test file which is a new save
+/#
+
+#
+Player
+name : Makke
+hp : 100
+ap : 6
+init : 100
+/#
+
+#
+Player
+name : Mikko
+hp : 120
+ap : 8
+mp : 4
+init : 120
+/#
+
+#
+Enemy : ranger
+name : Skeleton
+hp : 80
+ap : 6
+mp : 4
+init : 150
+/#

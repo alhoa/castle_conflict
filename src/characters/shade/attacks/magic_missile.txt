@@ -1,0 +1,5 @@
+Magic missile
+
+cost : 3
+range : 6
+damage : 4 : 1

@@ -1,0 +1,42 @@
+CC save
+
+#
+Information
+
+initialized : 0
+map : forest
+/#
+
+#
+Comments
+
+test file which is a new save
+/#
+
+
+#
+Player
+name : Makke
+hp : 100
+ap : 6
+mp : 3
+init : 100
+/#
+
+#
+Player
+name : Mikko
+hp : 120
+ap : 8
+mp : 4
+init : 120
+/#
+
+#
+Enemy : runner
+name : Spider
+hp : 40
+ap : 4
+mp : 7
+init : 60
+/#
