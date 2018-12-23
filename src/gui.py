@@ -253,16 +253,16 @@ class GUI(QtWidgets.QMainWindow):
 		next_turn_btn.clicked.connect(lambda: self.parse_trigger("End turn"))
 		self.button_group.addWidget(next_turn_btn, 0,0,1,1)
 
-
+		"""
 		move_icon = QtGui.QIcon(QtGui.QPixmap("graphics/move_icon.png"))	
 		move_btn = QtWidgets.QPushButton(move_icon,"")
 		move_btn.setIconSize(QtCore.QSize(50,50))
 		move_btn.setToolTip("Move")
 		move_btn.clicked.connect(lambda: self.parse_trigger("Move"))
 		self.button_group.addWidget(move_btn, 1,0,1,1)
-
+		"""
 		self.buttons.append(next_turn_btn)
-		self.buttons.append(move_btn)
+		#self.buttons.append(move_btn)
 
 		x = 1	#Button placement
 		y = 0
@@ -343,10 +343,10 @@ class GUI(QtWidgets.QMainWindow):
 		char = self.game.get_current_character()
 		attacks = char.get_attacks()
 
-		index = 1 #First two buttons can't be changed
+		index = 0 
 
 		for attack in attacks:
-			index += 1
+			index += 1 #First button can't be changed
 			if attack:
 				name = attack.get_name().lower().replace(" ", "_")
 				path = "characters/{}/attacks/{}.png".format(char.get_name().lower(), name)
