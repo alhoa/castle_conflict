@@ -20,7 +20,7 @@ class ObjectGraphics(QtWidgets.QGraphicsPixmapItem):
 
 		self.setScale(self.factor)
 
-		originy = int(self.factor*self.height) - 52
+		originy = int(self.factor*self.height) - 52 #52 pixels from bottom?
 
 		self.setPos(x,y-originy)
 		

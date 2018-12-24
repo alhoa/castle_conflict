@@ -11,6 +11,7 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 		super().__init__(pixmap)
 		self.char = character
 		self.coords = self.char.get_coordinates()
+		self.facing = "right"
 
 		self.height = pixmap.height()
 		#Assuming all icons are square?
