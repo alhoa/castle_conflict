@@ -111,6 +111,7 @@ class Game():
 		next_char = None
 
 		for char in self.characters:
+
 			#Find all unadded characters
 			if char.get_coordinates() == None:
 				if not char.is_controllable():

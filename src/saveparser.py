@@ -9,15 +9,13 @@ from runner import Runner
 from ranger import Ranger
 from attack import Attack
 import os
-
+import copy
 #Created the playable game based on a given file
 
 class SaveParser(object):
 
 	def __init__ (self):
 		self.save_comments = None
-		self.game = None
-		self.characters = []
 		self.map_path = None
 		self.tile_map = dict() #key = (R,G,B), value = (content, graphic)
 		self.game_index = 0
@@ -27,6 +25,7 @@ class SaveParser(object):
 		self.games = []
 		self.mapname = ""
 		self.enemies = []
+		self.players = []
 
 		#Read all enemy types into memory
 		self.all_enemies = dict()
@@ -118,8 +117,54 @@ class SaveParser(object):
 			else:
 				return
 
+	def next_game(self):
+		if self.game_index < (len(self.games)-1):
+			self.game_index += 1
+
+	def get_num_games(self):
+		return len(self.games)
+
 	def get_game(self):
-		return self.game
+		#Load next game
+		next_game = self.games[self.game_index]
+		
+		characters = []
+
+		#Characters are copies to not preserve their stats or position
+		for player in self.players:
+			characters.append(copy.copy(player))
+
+		enemies = next_game[1]
+		self.mapname = next_game[0]
+
+		for i in enemies:
+			enemy = self.all_enemies[i]
+			if self.char_ok(enemy):	
+				characters.append(copy.copy(enemy))
+			else:
+				raise CorruptedSaveError("File has corrupt player information")
+
+
+		#Sort characters based on initiative
+		characters = sorted(characters, key=lambda character: character.get_initiative())
+		characters.reverse()
+
+		map_path = "maps/{}.bmp".format(self.mapname)
+
+		im = Image(map_path)
+		width = im.get_width()
+		height = im.get_height()
+		
+
+		#Create game
+		game =  Game(width, height, characters, self.mapname)
+		for y in range(height):
+			for x in range(width):
+				pix_val = im.get_pixel(x,y)
+				[blocks_vision, blocks_movement, graphics] = self.determine_tile(pix_val)
+				game.set_tile_contents((x,y),blocks_vision, blocks_movement, graphics)
+
+		return game
 
 	def read_save(self, path):
 		try:
@@ -171,49 +216,9 @@ class SaveParser(object):
 							content = save.readline()
 							self.parse_character(content, player,0)
 						if self.char_ok(player):	
-							self.characters.append(player)
+							self.players.append(player)
 						else:
 							raise CorruptedSaveError("File has corrupt player information")
-
-			#Load next game
-			next_game = self.games[self.game_index]
-			
-
-
-			enemies = next_game[1]
-			self.mapname = next_game[0]
-
-			for i in enemies:
-				enemy = self.all_enemies[i]
-				if self.char_ok(enemy):	
-					self.characters.append(enemy)
-				else:
-					raise CorruptedSaveError("File has corrupt player information")
-
-
-			#Sort characters based on initiative
-			self.characters = sorted(self.characters, key=lambda character: character.get_initiative())
-			self.characters.reverse()
-
-
-			map_path = "maps/{}.bmp".format(self.mapname)
-
-			im = Image(map_path)
-			width = im.get_width()
-			height = im.get_height()
-			
-			#Create game
-			self.game =  Game(width, height, self.characters,self.mapname)
-			for y in range(height):
-				for x in range(width):
-					pix_val = im.get_pixel(x,y)
-					[blocks_vision, blocks_movement, graphics] = self.determine_tile(pix_val)
-					self.game.set_tile_contents((x,y),blocks_vision, blocks_movement, graphics)
-
-
-
-
-
 
 
 		except OSError:

@@ -616,3 +616,6 @@ class GUI(QtWidgets.QMainWindow):
 				self.close() 	#Close window if game has ended
 			else:
 				self.state = "Move" #Stop actions with escape key
+
+		if e.key() == QtCore.Qt.Key_G:
+			self.close()

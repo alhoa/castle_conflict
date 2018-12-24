@@ -24,14 +24,22 @@ def main():
 	try:
 		parser = SaveParser()
 		parser.read_save(save_path)
-		game = parser.get_game()
-		gui = GUI(game)
+		
+		num_games = parser.get_num_games()
+
+		for i in range(num_games):
+			game = parser.get_game()
+			GUI(game)
+			app.exec_()
+			parser.next_game()
+
+
 	except CorruptedSaveError as msg:
 		print(msg)
 		sys.exit()
 
 
-	sys.exit(app.exec_())
+	sys.exit()
 
 if __name__ == '__main__':
 	main()
