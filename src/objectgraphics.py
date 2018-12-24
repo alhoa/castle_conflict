@@ -10,15 +10,17 @@ class ObjectGraphics(QtWidgets.QGraphicsPixmapItem):
 
 		pixmap = QtGui.QPixmap(path)
 
+		self.height = pixmap.height()
+
 		super().__init__(pixmap)
 
 		icon_size = pixmap.width() #Assuming all icon are square
 		
-		factor = size/icon_size
+		self.factor = size/icon_size
 
-		self.setScale(factor)
+		self.setScale(self.factor)
 
-		originy = int(factor*pixmap.height()) - 52
+		originy = int(self.factor*self.height) - 52
 
 		self.setPos(x,y-originy)
 		
@@ -27,3 +29,6 @@ class ObjectGraphics(QtWidgets.QGraphicsPixmapItem):
 
 	def get_type(self):
 		return self.type
+
+	def get_height(self):
+		return int(self.factor*self.height)

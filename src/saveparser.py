@@ -159,7 +159,6 @@ class SaveParser(object):
 						self.enemies = []
 						while content[0:2] != '/#':
 							content = save.readline()
-							print(content)
 							self.parse_game(content)
 
 						self.games.append((self.mapname, self.enemies))

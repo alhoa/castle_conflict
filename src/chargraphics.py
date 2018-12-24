@@ -7,19 +7,21 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 
 		path = "characters/{}/icon.png".format(character.get_name().lower())
 		pixmap = QtGui.QPixmap(path) #No need for exeptions, Qpixmap will be white if image isn't found
+		
 		super().__init__(pixmap)
 		self.char = character
 		self.coords = self.char.get_coordinates()
 
-		#Assuming all icon are square
+		self.height = pixmap.height()
+		#Assuming all icons are square?
 		icon_size = pixmap.width() 
 		
 		#Scale all icons to the same size
-		factor = size/icon_size
+		self.factor = size/icon_size
 
-		self.setScale(factor)
+		self.setScale(self.factor)
 
-		originy = int(factor*pixmap.height()) - 52
+		originy = int(self.factor*self.height) - 52
 
 		self.setPos(x,y-originy)
 
@@ -41,3 +43,6 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 
 	def get_character(self):
 		return self.char
+
+	def get_height(self):
+		return int(self.factor*self.height)

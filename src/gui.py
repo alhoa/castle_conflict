@@ -443,7 +443,7 @@ class GUI(QtWidgets.QMainWindow):
 				items.append(item)
 	
 		for item in items:
-			position = item.y()
+			position = item.y()+item.get_height()
 			item.setZValue(1000+position) #Add 1000 to prevent characters goind under bacground
 
 	#Function to print informtaion to the log box
