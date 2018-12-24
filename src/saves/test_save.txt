@@ -10,16 +10,31 @@ index : 0
 #
 Comments
 
-test file which is a new save
+The order of games matters in the file
 /#
 
 #
-Games
+game
+map : volcano
+Enemy : skeleton : 1
+Enemy : spider : 1
+Enemy : shade : 1
+/#
 
-name : volcano_game
-name : beach_game
-name : forest_game
+#
+game
+map : beach
+Enemy : skeleton : 1
+Enemy : spider : 1
+Enemy : shade : 1
+/#
 
+#
+game
+map : forest
+Enemy : skeleton : 1
+Enemy : spider : 1
+Enemy : shade : 1
 /#
 
 #

@@ -21,10 +21,15 @@ class SaveParser(object):
 		self.map_path = None
 		self.tile_map = dict() #key = (R,G,B), value = (content, graphic)
 		self.game_index = 0
-		self.game_paths = []
+
+		#list all games and choose one to be loaded based on the game index
+		#game includes map name and list of enemies  in (name, level) format
+		self.games = []
+		self.mapname = ""
+		self.enemies = []
 
 		#Read all enemy types into memory
-		self.enemies = dict()
+		self.all_enemies = dict()
 
 		try:
 			enemy_stats = open("characters/enemy_stats.txt")
@@ -71,18 +76,18 @@ class SaveParser(object):
 							enemy.set_level(level)
 
 							key = (name, level)
-							self.enemies[key] = enemy
+							self.all_enemies[key] = enemy
 
 
 						while content[0:2] != '/#':
 							content = enemy_stats.readline()
 							#Add stats for each enemy
 							for i in range(num_level):
-								self.parse_character(content, self.enemies[(name, levels[i])], i)
+								self.parse_character(content, self.all_enemies[(name, levels[i])], i)
 
 						#Currently not checkin if all enemies are ok
 
-			if len(self.enemies) == 0:
+			if len(self.all_enemies) == 0:
 				raise CorruptedSaveError("Enemy stat file is empty.")
 		
 		except OSError:
@@ -148,11 +153,18 @@ class SaveParser(object):
 							self.parse_save_information(content)
 						info_read = True
 
-					if block_name == "games":
+					if block_name == "game":
+						#reset map name and enemy list before adding them to next entry in games list
+						self.mapname = ""
+						self.enemies = []
 						while content[0:2] != '/#':
 							content = save.readline()
-							self.parse_games(content)
-						games_read = True
+							print(content)
+							self.parse_game(content)
+
+						self.games.append((self.mapname, self.enemies))
+
+						games_read = True #games read is true if even one game is read
 
 					if block_name == "player":
 						player = Player()
@@ -164,10 +176,46 @@ class SaveParser(object):
 						else:
 							raise CorruptedSaveError("File has corrupt player information")
 
-			#find path of the next game
-			next_game_path = "games/{}.txt".format(self.game_paths[self.game_index])
+			#Load next game
+			next_game = self.games[self.game_index]
+			
 
-			self.generate_map(next_game_path)
+
+			enemies = next_game[1]
+			self.mapname = next_game[0]
+
+			for i in enemies:
+				enemy = self.all_enemies[i]
+				if self.char_ok(enemy):	
+					self.characters.append(enemy)
+				else:
+					raise CorruptedSaveError("File has corrupt player information")
+
+
+			#Sort characters based on initiative
+			self.characters = sorted(self.characters, key=lambda character: character.get_initiative())
+			self.characters.reverse()
+
+
+			map_path = "maps/{}.bmp".format(self.mapname)
+
+			im = Image(map_path)
+			width = im.get_width()
+			height = im.get_height()
+			
+			#Create game
+			self.game =  Game(width, height, self.characters,self.mapname)
+			for y in range(height):
+				for x in range(width):
+					pix_val = im.get_pixel(x,y)
+					[blocks_vision, blocks_movement, graphics] = self.determine_tile(pix_val)
+					self.game.set_tile_contents((x,y),blocks_vision, blocks_movement, graphics)
+
+
+
+
+
+
 
 		except OSError:
 			raise CorruptedSaveError("Reading the save data failed.")
@@ -181,90 +229,7 @@ class SaveParser(object):
 	def save_save(self, path):
 		pass
 
-
-	def generate_map(self,path):
-
-		info_read = False
-		header_read = False
-		current_line = ''	
-		content = ''
-		
-		#Read map file
-		try:
-			map_file = open(path)
-
-			if map_file == None:
-				print("Could not open {}".format(path))
-
-			current_line = map_file.readline()
-			header_parts = current_line.split(" ")
-
-			#Check header
-			if header_parts[0] != "CC":
-			    raise CorruptedSaveError("Unknown file type")
-
-			if header_parts[1].strip().lower() != 'game':
-			    raise CorruptedSaveError("File is not a game")
-			header_read = True
-
-			for line in map_file:
-				if line[0] == '#':
-					content = ''
-					block_header = map_file.readline() #Excluding #in first position
-					block_header = block_header.split(":")
-					block_name = block_header[0].strip()
-					block_name = block_name.lower()
-
-					if block_name == "information":
-						while content[0:2] != '/#':
-							content = map_file.readline()
-							self.parse_game_information(content)
-						info_read = True
-
-					if block_name == "enemy":
-						if len(block_header) < 3: #Make sure that all enemies have a name
-							raise CorruptedSaveError("An enemy is missing a name and level")
-						else:
-							name = block_header[1].strip().lower()
-							level = int(block_header[2].strip())
-							enemy = self.enemies[(name, level)]
-
-						if self.char_ok(enemy):	
-							self.characters.append(enemy)
-						else:
-							raise CorruptedSaveError("File has corrupt player information")
-
-
-			#Sort characters based on initiative
-			self.characters = sorted(self.characters, key=lambda character: character.get_initiative())
-			self.characters.reverse()
-
-			if not self.map_path:
-				raise CorruptedSaveError("Save is missing map")
-
-			im = Image(self.map_path)
-			width = im.get_width()
-			height = im.get_height()
-			
-			#Create game
-			self.game =  Game(width, height, self.characters,self.mapname)
-			for y in range(height):
-				for x in range(width):
-					pix_val = im.get_pixel(x,y)
-					[blocks_vision, blocks_movement, graphics] = self.determine_tile(pix_val)
-					self.game.set_tile_contents((x,y),blocks_vision, blocks_movement, graphics)
-
-			return
-
-		except OSError:
-			raise CorruptedSaveError("Reading the save data failed.")
-
-		finally:
-			if map_file:
-				map_file.close()
-			else:
-				return
-
+	
 	#Determine map contents based on pixel value
 	def determine_tile(self,pix_val):
 		
@@ -317,32 +282,23 @@ class SaveParser(object):
 		if key=="index":
 			self.game_index = int(data)
 
-	def parse_games(self, line):
+	def parse_game(self, line):
 		content = line.split(":")
 		if len(content) < 2:
 			return
 
-		key = content[0].strip()
+		content = list(map(lambda s: s.strip(),content))
+		key = content[0]
 		key = key.lower()
-		data = content[1].strip()
 
-		if key=="name":
-			self.game_paths.append(data)
-			
+		if key == "map":
+			self.mapname = content[1].lower()
 
-	#Determine header information
-	def parse_game_information(self,line):
-		content = line.split(":")
-		if len(content) < 2:
-			return
+		elif key == "enemy":
+			name = content[1].lower()
+			level = int(content[2])
+			self.enemies.append((name, level))
 
-		key = content[0].strip()
-		key = key.lower()
-		data = content[1].strip()
-
-		if key=="map":
-			self.mapname = data
-			self.map_path = "maps/{}.bmp".format(data)
 
 	#Determine character information
 	#level is used to read info about enemies
@@ -396,18 +352,6 @@ class SaveParser(object):
 		else:
 			raise CorruptedSaveError("Save file has unknown enemy types")
 
-	#Find attacks  in character folder
-	"""
-	def parse_folder(self,char):
-		name = char.get_name().lower()
-		path = "characters/{}/attacks".format(name)
-		index = 0
-		for file in os.listdir(path):
-			if file.endswith(".txt"):
-				attack = self.parse_attack("characters/{}/attacks/{}".format(name,file))
-				char.add_attack(attack, index)
-				index += 1
-	"""
 
 	#Determine attack parameters
 	def parse_attack(self, path):
