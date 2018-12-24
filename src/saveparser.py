@@ -117,6 +117,9 @@ class SaveParser(object):
 			else:
 				return
 
+	def get_loaded_enemies(self):
+		return self.all_enemies
+
 	def next_game(self):
 		if self.game_index < (len(self.games)-1):
 			self.game_index += 1
