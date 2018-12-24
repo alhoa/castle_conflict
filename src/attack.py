@@ -1,5 +1,5 @@
 import random
-
+#kommentti
 class Attack:
 	def __init__(self, name, cost,  max_range, damage, effect):
 		self.name = str(name)
