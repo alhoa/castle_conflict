@@ -16,6 +16,9 @@ class Player(Character):
 	#Choose attack based on selected index and highlight possible targets
 	def choose_target(self, index):
 		attack = self.attacks[index]
+		if attack == None:
+			return
+
 		if self.ap >= attack.get_cost():
 			self.active_attack = attack
 			range = self.active_attack.get_range()

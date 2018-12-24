@@ -464,9 +464,6 @@ class GUI(QtWidgets.QMainWindow):
 			self.game.next_turn() #End the turn
 			self.turn_type() # Check whether turn is player or enemy
 
-		#elif message == "Move":
-			#self.state = message
-
 		#For debugging
 		elif message == "Kill":
 			player = self.game.get_current_character()
@@ -475,9 +472,6 @@ class GUI(QtWidgets.QMainWindow):
 		elif message == "Attack":
 			self.state = message
 			self.game.get_current_character().choose_target(index)
-
-		elif message[0:3] == "End":
-			self.end_game(msg)
 
 		else:
 			self.update_log(message)
@@ -611,6 +605,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	def keyPressEvent(self,e):
 
+
 		if e.key() == QtCore.Qt.Key_Escape:
 			if self.ended:
 				self.close() 	#Close window if game has ended
@@ -619,3 +614,22 @@ class GUI(QtWidgets.QMainWindow):
 
 		if e.key() == QtCore.Qt.Key_G:
 			self.close()
+
+		#Hotkeys only work when buttons work and game is initialised
+		if (not self.busy) and self.game.get_initialized():
+			if e.key() == QtCore.Qt.Key_Space:
+				self.parse_trigger("End turn")
+
+			if e.key() == QtCore.Qt.Key_1:
+				self.parse_trigger("Attack", 0)
+			if e.key() == QtCore.Qt.Key_2:
+				self.parse_trigger("Attack", 1)
+			if e.key() == QtCore.Qt.Key_3:
+				self.parse_trigger("Attack", 2)
+			if e.key() == QtCore.Qt.Key_4:
+				self.parse_trigger("Attack", 3)
+			if e.key() == QtCore.Qt.Key_5:
+				self.parse_trigger("Attack", 4)
+			if e.key() == QtCore.Qt.Key_6:
+				self.parse_trigger("Attack", 5)
+
