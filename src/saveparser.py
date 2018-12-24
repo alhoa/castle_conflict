@@ -23,9 +23,79 @@ class SaveParser(object):
 		self.game_index = 0
 		self.game_paths = []
 
+		#Read all enemy types into memory
+		self.enemies = dict()
+
+		try:
+			enemy_stats = open("characters/enemy_stats.txt")
+
+			if enemy_stats == None:
+				print("Could not open enemy stat file")
+
+			current_line = enemy_stats.readline()
+			header_parts = current_line.split(" ")
+
+			#Check header
+			if header_parts[0] != "CC":
+			    raise CorruptedSaveError("Unknown enemy stat file type")
+
+			if header_parts[1].strip().lower() != 'enemy':
+			    raise CorruptedSaveError("File is not a enemy stat file")
+			header_read = True
+
+			
+			for line in enemy_stats:
+				if line[0] == '#':
+					content = ''
+					block_header = enemy_stats.readline() #Excluding #in first position
+					block_header = block_header.split(":")
+
+					if len(block_header) == 1:
+						name = block_header[0].strip().lower()
+
+						content = enemy_stats.readline()
+						content = content.split(":")
+						enemy_type = content[0].strip().lower()
+
+						num_level = len(content)-1 #Number of different levels for enemies
+
+						levels = [] #store levels in temporary vector to access the keys in second loop
+
+						#Add correct amount of enemies to the dictionary
+						for i in range(num_level):
+							enemy = self.parse_enemy_type(enemy_type)
+							level = int(content[i+1])
+							levels.append(level)
+
+							enemy.set_name(name)
+							enemy.set_level(level)
+
+							key = (name, level)
+							self.enemies[key] = enemy
+
+
+						while content[0:2] != '/#':
+							content = enemy_stats.readline()
+							#Add stats for each enemy
+							for i in range(num_level):
+								self.parse_character(content, self.enemies[(name, levels[i])], i)
+
+						#Currently not checkin if all enemies are ok
+
+			if len(self.enemies) == 0:
+				raise CorruptedSaveError("Enemy stat file is empty.")
+		
+		except OSError:
+			raise CorruptedSaveError("Enemy stat file is corrupt.")
+		finally:
+			if enemy_stats:
+				enemy_stats.close()
+			else:
+				return
+
 		#Read map initialisation file to match pixel values and properties
 		try:
-			map_map = open("maps/maps.ini")
+			map_map = open("maps/maps.txt")
 			for line in map_map:
 				if line[0] == '#':
 					pass
@@ -88,8 +158,7 @@ class SaveParser(object):
 						player = Player()
 						while content[0:2] != '/#':
 							content = save.readline()
-							self.parse_character(content, player)
-						self.parse_folder(player)
+							self.parse_character(content, player,0)
 						if self.char_ok(player):	
 							self.characters.append(player)
 						else:
@@ -153,13 +222,13 @@ class SaveParser(object):
 						info_read = True
 
 					if block_name == "enemy":
-						if len(block_header) == 1: #Make sure that all enemies have an AI
-							raise CorruptedSaveError("An enemy is missing behaviour")
-						enemy = self.parse_enemy_type(block_header[1])
-						while content[0:2] != '/#':
-							content = map_file.readline()
-							self.parse_character(content, enemy)
-						self.parse_folder(enemy)
+						if len(block_header) < 3: #Make sure that all enemies have a name
+							raise CorruptedSaveError("An enemy is missing a name and level")
+						else:
+							name = block_header[1].strip().lower()
+							level = int(block_header[2].strip())
+							enemy = self.enemies[(name, level)]
+
 						if self.char_ok(enemy):	
 							self.characters.append(enemy)
 						else:
@@ -276,9 +345,10 @@ class SaveParser(object):
 			self.map_path = "maps/{}.bmp".format(data)
 
 	#Determine character information
-	def parse_character(self,line,character):
+	#level is used to read info about enemies
+	def parse_character(self,line,character, level):
 		content = line.split(":")
-		if len(content) < 2:
+		if len(content) < 2 + level:
 			return
 
 		content = list(map(lambda s: s.strip(),content))
@@ -287,36 +357,31 @@ class SaveParser(object):
 
 
 		if key == 'name':
-			character.set_name(content[1])
+			character.set_name(content[1+level])
 
 		#Can set hp other than max hp
 		elif key == 'hp':
-			character.set_hp_max(int(content[1]))
-			if len(content)>2:
-				character.set_hp(int(content[2]))
-			else:
-				character.set_hp(int(content[1]))
+			character.set_hp_max(int(content[1+level]))
+			character.set_hp(int(content[1+level]))
 
 		elif key == 'mp':
-			character.set_mp_max(int(content[1]))
-			if len(content)>2:
-				character.set_mp(int(content[2]))
-			else:
-				character.set_mp(int(content[1]))
+			character.set_mp_max(int(content[1+level]))
+			character.set_mp(int(content[1+level]))
 
 		elif key == 'ap':
-			character.set_ap_max(int(content[1]))
-			if len(content)>2:
-				character.set_ap(int(content[2]))
-			else:
-				character.set_ap(int(content[1]))
+			character.set_ap_max(int(content[1+level]))
+			character.set_ap(int(content[1+level]))
 
 		elif key == 'init':
-			character.set_initiative(int(content[1]))
+			character.set_initiative(int(content[1+level]))
 
-		#Level affects available attacks, only cosmetic for enemies
+		#Level affects available attacks
 		elif key == 'level':
-			character.set_level(int(content[1]))
+			character.set_level(int(content[1+level]))
+
+		elif key == 'attack':
+			attack = self.parse_attack("attacks/{}.txt".format(content[1+level]))
+			character.add_attack(attack)
 
 	def parse_enemy_type(self, line):
 		content = line.strip()
@@ -332,6 +397,7 @@ class SaveParser(object):
 			raise CorruptedSaveError("Save file has unknown enemy types")
 
 	#Find attacks  in character folder
+	"""
 	def parse_folder(self,char):
 		name = char.get_name().lower()
 		path = "characters/{}/attacks".format(name)
@@ -341,6 +407,7 @@ class SaveParser(object):
 				attack = self.parse_attack("characters/{}/attacks/{}".format(name,file))
 				char.add_attack(attack, index)
 				index += 1
+	"""
 
 	#Determine attack parameters
 	def parse_attack(self, path):
@@ -355,7 +422,7 @@ class SaveParser(object):
 		try:
 			data = open(path)
 		except OSError:
-			raise CorruptedSaveError("Could not open attack file path")
+			raise CorruptedSaveError("Could not open attack file path:{}".format(path))
 		else:
 			name = data.readline().strip()
 

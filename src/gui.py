@@ -254,7 +254,6 @@ class GUI(QtWidgets.QMainWindow):
 		self.button_group.addWidget(next_turn_btn, 0,0,1,1)
 
 		self.buttons.append(next_turn_btn)
-		#self.buttons.append(move_btn)
 
 		x = 1	#Button placement
 		y = 0
@@ -341,7 +340,7 @@ class GUI(QtWidgets.QMainWindow):
 			index += 1 #First button can't be changed
 			if attack:
 				name = attack.get_name().lower().replace(" ", "_")
-				path = "characters/{}/attacks/{}.png".format(char.get_name().lower(), name)
+				path = "attacks/{}.png".format(name)
 				icon = QtGui.QIcon(QtGui.QPixmap(path))
 				self.buttons[index].setToolTip(str(attack))
 			else:
@@ -486,10 +485,12 @@ class GUI(QtWidgets.QMainWindow):
 	#Check if the active player is an enemy
 	def turn_type(self):
 		char = self.game.get_current_character()
-		if char.is_controllable(): #Enable buttons on player turns
+		if char.is_controllable(): #Enable buttons and movement on player turns
 			self.busy = False
+			self.state = "Move"
 		else:
-			self.busy = True              #Disable buttons on enemy turns
+			self.busy = True             #Disable buttons on enemy turns
+			self.state = None			#Disable moving enemies
 			self.enemy_timer.start(100) #Shorter dealy before first action 
 
 	#Make one enemy action and wait for animation to end

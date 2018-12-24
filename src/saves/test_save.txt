@@ -29,7 +29,11 @@ hp : 80
 ap : 7
 mp : 4
 init : 100
-level : 1
+level : 3
+attack : punch
+attack : accelerate
+attack : magic_missile
+attack : slow
 /#
 
 #
@@ -39,5 +43,8 @@ hp : 70
 ap : 8
 mp : 3
 init : 120
-level : 0
+level : 2
+attack : punch
+attack : bind
+attack : magic_missile
 /#

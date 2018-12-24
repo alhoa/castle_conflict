@@ -13,28 +13,13 @@ test file which is a new save
 /#
 
 #
-Enemy : ranger
-name : Skeleton
-hp : 50
-ap : 6
-mp : 4
-init : 150
+Enemy : skeleton : 1
 /#
 
 #
-Enemy : runner
-name : Spider
-hp : 40
-ap : 4
-mp : 7
-init : 60
+Enemy : spider : 1
 /#
 
 #
-Enemy : brute
-name : Shade
-hp : 60
-ap : 7
-mp : 3
-init : 80
+Enemy : shade : 1
 /#

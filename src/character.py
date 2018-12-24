@@ -42,8 +42,13 @@ class Character():
 	def get_path(self):
 		return self.path
 
-	def add_attack(self, attack, index):
-		self.attacks[index] = attack
+	def add_attack(self, attack):
+		#only add attacks up to 6
+		for i in range(len(self.attacks)):
+			if not self.attacks[i]:
+				self.attacks[i] = attack
+				return
+
 	def get_attacks(self):
 		return self.attacks
 

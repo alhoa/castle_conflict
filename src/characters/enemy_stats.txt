@@ -1,0 +1,36 @@
+CC enemy stats
+
+#
+skeleton 
+ranger :  1 : 2 : 3
+
+hp : 40 : 50 : 60
+ap : 6 : 6 : 7 
+mp : 4 : 4 : 4
+init : 150 : 160 : 170
+attack : punch : punch : punch
+attack : magic_missile : magic_missile : magic_missile
+/#
+
+#
+spider
+runner : 1 : 2 : 3
+
+hp : 40 : 50 : 60
+ap : 6 : 6 : 7 
+mp : 4 : 4 : 4
+init : 150 : 160 : 170
+attack : bite : bite : bite
+/#
+
+#
+shade
+brute : 1 : 2 : 3
+
+hp : 60 : 70 : 75
+ap : 4 : 4 : 5 
+mp : 3 : 3 : 3
+init : 80 : 85 : 90
+attack : punch : punch : punch
+attack : magic_missile : magic_missile : magic_missile
+/#
