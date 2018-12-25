@@ -5,16 +5,22 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 	def __init__(self, x,y,size, character):
 
 
-		self.path = "characters/{}/iconNE.png".format(character.get_name().lower())
-		pixmap = QtGui.QPixmap(self.path) #No need for exeptions, Qpixmap will be white if image isn't found
+		directions = ["SW", "NE", "NW", "SE"]
+		self.pixmaps = dict()
 
-		super().__init__(pixmap)
-		self.char = character
-		self.coords = self.char.get_coordinates()
+		#Read all directions to a dictionary
+		for direction in directions:
+			path = "characters/{}/icon{}.png".format(character.get_name().lower(),direction)
+			self.pixmaps[direction] = QtGui.QPixmap(path) #No need for exeptions, Qpixmap will be white if image isn't found
 
-		self.height = pixmap.height()
-		#Assuming all icons are square?
-		icon_size = pixmap.width() 
+		#Looking right is the default direction
+		super().__init__(self.pixmaps["SE"])
+
+		#Scale pixmapitem size
+		#Pixmap() defined in QGraphicsPixmapItem
+		self.height = self.pixmap().height()
+		#Assuming all icons are square? and the same size
+		icon_size = self.pixmap().width() 
 		
 		#Scale all icons to the same size
 		self.factor = size/icon_size
@@ -25,8 +31,11 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 
 		self.setPos(x,y-originy)
 
-		self.setZValue(10000) #Spawn on top of icons
+		self.setZValue(10000) #Spawn on top of other icons
 
+		#Link to character
+		self.char = character
+		self.coords = self.char.get_coordinates()
 		
 	#Check if icon is at the correct position
 	def at_character_position(self):
@@ -46,18 +55,20 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 
 	# Turns the character to face the direction of the last movement
 	def turn(self,x,y):
-		face = 1
-		if x == -1:
-			face = "SW"
-		elif x == 1:
-			face = "NE"
-		elif y == -1:
-			face= "NW"
-		elif y == 1:
-			face= "SE"
-		self.path = "characters/{}/icon{}.png".format(self.char.get_name().lower(),face)
-		pixmap = QtGui.QPixmap(self.path)
-		self.setPixmap(pixmap)
+		face = "SE" #Default facing
+
+		if abs(x)>abs(y):
+			if x < 0:
+				face = "SW"
+			elif x > 0:
+				face = "NE"
+		else:		
+			if y < 0:
+				face= "NW"
+			elif y > 0:
+				face= "SE"
+
+		self.setPixmap(self.pixmaps[face])
 
 	def get_height(self):
 		return int(self.factor*self.height)

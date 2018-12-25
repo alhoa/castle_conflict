@@ -40,7 +40,11 @@ class Player(Character):
 			char = self.game.get_tile(target).get_character()
 			self.ap -= self.active_attack.get_cost()
 
-			self.game.gui.get_character_graphics(self).turn(1, 1)
+			#Define turn direction
+			x = target[0]-self.coordinates[0]
+			y = target[1]-self.coordinates[1]
+			self.game.gui.get_character_graphics(self).turn(x, y)
+			
 			if char:
 				dmg = self.active_attack.calculate_damage()
 				char.set_hp(char.get_hp()-dmg)
