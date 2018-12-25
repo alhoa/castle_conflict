@@ -12,6 +12,10 @@ class Player(Character):
 		self.xp = 0
 		self.stored_xp = 0
 
+		#stats
+		self.strength = 0
+		self.dexterity = 0
+
 	def get_xp(self):
 		return self.xp
 	def set_xp(self, val):
