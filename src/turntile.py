@@ -20,7 +20,7 @@ class TurnTile(QtWidgets.QGraphicsItemGroup):
 		self.addToGroup(self.rectangle_background)
 
 		#Get character icon
-		path = "characters/{}/icon.png".format(character.get_name().lower())
+		path = "characters/{}/iconSE.png".format(character.get_name().lower())
 		pixmap = QtGui.QPixmap(path)
 		self.char_icon = QtWidgets.QGraphicsPixmapItem(pixmap)
 		self.char_icon.setPos(x,y)
