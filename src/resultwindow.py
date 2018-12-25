@@ -34,19 +34,62 @@ class ResultWindow(QtWidgets.QMainWindow):
 		for player in self.game.get_players():
 
 			nameval_label = QtWidgets.QLabel(player.get_name())
-			self.label_group.addWidget(nameval_label, index, 0,1,1)
+			self.label_group.addWidget(nameval_label, index+1, 0,1,1)
 
 			level_label = QtWidgets.QLabel("Level:")
-			self.label_group.addWidget(level_label, index,1,1,1)
+			self.label_group.addWidget(level_label, index+1,1,1,1)
 
 			level_val_label = QtWidgets.QLabel(str(player.get_level()))
-			self.label_group.addWidget(level_val_label,index,2,1,1)
+			self.label_group.addWidget(level_val_label,index+1,2,1,1)
 
 			hp_label = QtWidgets.QLabel("Xp gained:")
 			self.label_group.addWidget(hp_label,index,3,1,1)
 
 			hpval_label = QtWidgets.QLabel(str(player.get_xp()))
 			self.label_group.addWidget(hpval_label,index,4,1,1)
+
+			normal_style = """
+			QProgressBar{{
+				border: 1px solid grey;
+				border-radius: 3px;
+				text-align: center
+			}}
+
+			QProgressBar::chunk {{
+				background: qlineargradient(x1: 0, x2: 1 ,stop: 0 gray, stop: {} gray, stop: {} #05B8CC stop: 1.0 #05B8CC);
+			}}
+			"""
+
+			no_xp_style = """
+			QProgressBar{
+				border: 1px solid grey;
+				border-radius: 3px;
+				text-align: center
+			}
+
+			QProgressBar::chunk {
+				 background-color: gray;
+			}
+			"""
+
+			max_xp = 100 #Value for next level
+
+
+			progress_bar = QtWidgets.QProgressBar()
+
+			if player.get_xp() == 0:
+				progress_bar.setStyleSheet(no_xp_style)
+			else:
+				if (player.get_xp()+player.get_stored_xp()) == 0:
+					percent_new = 0
+				else:
+					percent_new = player.get_stored_xp()/(player.get_xp()+player.get_stored_xp())
+				progress_bar.setStyleSheet(normal_style.format(percent_new, percent_new+0.0001)) 
+
+			progress_bar.setRange(0,max_xp)
+			
+			progress_bar.setValue(player.get_xp()+player.get_stored_xp())
+			self.label_group.addWidget(progress_bar,index+1,3,1,4)
 
 			ap_label = QtWidgets.QLabel("Total xp:")
 			self.label_group.addWidget(ap_label,index,5,1,1)
@@ -55,12 +98,12 @@ class ResultWindow(QtWidgets.QMainWindow):
 			self.label_group.addWidget(apval_label,index,6,1,1)
 
 			mp_label = QtWidgets.QLabel("Loot:")
-			self.label_group.addWidget(mp_label,index,7,1,1)
+			self.label_group.addWidget(mp_label,index+1,7,1,1)
 
 			mpval_label = QtWidgets.QLabel(str(player.get_hp()))
-			self.label_group.addWidget(mpval_label,index,8,1,1)
+			self.label_group.addWidget(mpval_label,index+1,8,1,1)
 
-			index += 1
+			index += 2
 
 		self.label_box = QtWidgets.QGroupBox()
 		self.label_box.setLayout(self.label_group)
