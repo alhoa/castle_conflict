@@ -1,4 +1,4 @@
-#Mapping Format in R: G: B: Blocks vision (0/1): Blocks movement (0/1): Graphic
+#Mapping Format in R: G: B: Blocks vision (0/1): Blocks movement (0/1): icon file name
 
 255	: 255	: 255	: 0: 0: NONE
 255	: 0		: 0		: 1: 1: WALL

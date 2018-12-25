@@ -120,16 +120,12 @@ class SaveParser(object):
 	def get_loaded_enemies(self):
 		return self.all_enemies
 
-	def next_game(self):
-		if self.game_index < (len(self.games)-1):
-			self.game_index += 1
-
 	def get_num_games(self):
 		return len(self.games)
 
-	def get_game(self):
+	def get_game(self, index):
 		#Load next game
-		next_game = self.games[self.game_index]
+		next_game = self.games[index]
 		
 		characters = []
 

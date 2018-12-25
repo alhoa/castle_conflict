@@ -16,8 +16,8 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.layout = QtWidgets.QGridLayout() #Use grid layout
 		self.centralWidget().setLayout(self.layout)
 
-		self.WINDOW_HEIGHT = 480		#Dimensions for graphical window
-		self.WINDOW_WIDTH = 720
+		self.WINDOW_HEIGHT = 410		#Dimensions for graphical window
+		self.WINDOW_WIDTH = 700
 
 		self.buttons = [] #Save buttons in separate list to simplify updating them
 
@@ -26,18 +26,13 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.init_log()
 		self.init_buttons()
 
-		self.parser = SaveParser()
-
-		#inform player about loaded enemies
-		self.update_log("Loaded enemies:")
-
-		enemies = self.parser.get_loaded_enemies()
-
-		for key in enemies:
-			self.update_log("Name: {name},    Level: {level}".format(name=key[0], level = key[1]))
+		self.parser = None
 
 		self.game_index = 0
 		self.num_games = 0
+
+		self.update_log("Welcome!")
+		self.update_log("Press load save to start a game")
 
 
 	#Setup of the graphical window
@@ -53,6 +48,11 @@ class MainWindow(QtWidgets.QMainWindow):
 		# Add a view for showing the scene
 		self.view = QtWidgets.QGraphicsView(self.scene, self)
 		self.layout.addWidget(self.view, 0,0,1,4)
+
+		pixmap = QtGui.QPixmap("graphics/title.png")
+		pixmap_item = QtWidgets.QGraphicsPixmapItem(pixmap)
+		pixmap_item.setScale(0.4)
+		self.scene.addItem(pixmap_item)
 
 		self.show()
 
@@ -87,6 +87,22 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.layout.addWidget(self.group_box, 1,2,1,1)
 
 	def load_game(self):
+
+		#Reset game counter
+		self.game_index = 0
+
+		#Create new parser 
+		try:
+			self.parser = SaveParser()
+		except CorruptedSaveError as msg:
+			self.update_log(msg)
+
+		#inform player about loaded enemies
+		self.update_log("Loaded enemies:")
+		enemies = self.parser.get_loaded_enemies()
+		for key in enemies:
+			self.update_log("Name: {name},    Level: {level}".format(name=key[0], level = key[1]))
+
 		#Show dialog window to choose save file
 		dialog = QtWidgets.QFileDialog()
 		dialog.setDirectory("saves/")
@@ -99,13 +115,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
 			#Check how many games were read
 			self.num_games = self.parser.get_num_games()
+			self.update_log("Loaded {} games".format(self.num_games))
 		except CorruptedSaveError as msg:
 			self.update_log(msg)
 
 	def start_game(self):
 		if self.game_index < self.num_games:
-			game = self.parser.get_game()
+			game = self.parser.get_game(self.game_index)
+			#Clumsy way to move forward
+			self.game_index += 1
+
+			#Start game
 			self.gui = GUI(game)
+		elif self.parser == None:
+			self.update_log("No save loaded")
 		else:
 			self.update_log("Not enough games loaded")
 
@@ -122,7 +145,6 @@ class MainWindow(QtWidgets.QMainWindow):
 			
 		elif message == "Start game":
 			self.start_game()
-
 
 		else:
 			self.update_log(message)
