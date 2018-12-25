@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from gui import GUI
 from resultwindow import ResultWindow
+from statwindow import StatWindow
+from itemwindow import ItemWindow
 from saveparser import SaveParser
 from chargraphics import CharGraphics
 from exceptions import *
@@ -20,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.WINDOW_HEIGHT = 650		#Dimensions for graphical window
 		self.WINDOW_WIDTH = 720
-		self.ICON_SIZE = 175 #Window can fit 4 icons
+		self.ICON_SIZE = (self.WINDOW_WIDTH-20)/4 #Window can fit 4 icons
 
 		self.buttons = [] #Save buttons in separate list to simplify updating them
 
@@ -34,6 +36,9 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.parser = None
 		self.game_gui = None
 		self.active_game = None
+
+		self.inv_window = None
+		self.stat_window = None
 		self.players = []
 
 		self.game_index = 0
@@ -83,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.info_group = QtWidgets.QGridLayout()
 
 
-		column_width = 90
+		column_width = self.WINDOW_WIDTH/8
 
 		for i in range(8):
 			self.info_group.setColumnMinimumWidth(i, column_width)
@@ -116,16 +121,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
 			inv_btn = QtWidgets.QPushButton("Inventory")
 			inv_btn.setToolTip("Open inventory")
+			inv_btn.clicked.connect(lambda state, x=player: self.show_inventory(x))
 			self.info_group.addWidget(inv_btn, 4,shift,1,2)
 
 			stat_btn = QtWidgets.QPushButton("Stats")
 			stat_btn.setToolTip("Open stats")
+			stat_btn.clicked.connect(lambda state, x=player: self.show_stats(x))
 			self.info_group.addWidget(stat_btn, 5,shift,1,2)
 
 			shift += 2
-
-		
-
 
 		group_box = QtWidgets.QGroupBox()
 		group_box.setLayout(self.info_group)
@@ -250,3 +254,17 @@ class MainWindow(QtWidgets.QMainWindow):
 	def update_log(self, msg):
 		self.log.append(msg)
 		self.log.ensureCursorVisible() #Scroll down to see cursor
+
+	def show_inventory(self, char):
+		#Close previous window
+		if self.inv_window:
+			self.inv_window.close()
+
+		self.inv_window = ItemWindow(char)
+
+	def show_stats(self, char):
+		#Close previous window
+		if self.stat_window:
+			self.stat_window.close()
+
+		self.stat_window = StatWindow(char)
