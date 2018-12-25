@@ -1,66 +1,64 @@
 # Castle Conflict
 
-Castle Conflict is a small strategy game written in python for the CS-A1121 -course.
+Castle Conflict is a small strategy game written in python and PyQt for the CS-A1121 -course.
 
 ![Game Title](/src/graphics/title.png)
 
-### 1. Kansiorakenne
+### 1. Folder structure
 
-Kaikki ohjelmaan liittyvä dokumentaatio löytyy /docs kansiosta. 
-Ohjelman lähdekood on kaikki /src kansiossa, minkä lisäksi /src alikansioissa on erilaisia pelin assetteja. Tarkka kuvaus kansiorakenteesta löytyy docs/loppuraportin kappaleesta 7. Peliä varten on luotu useita esimerkkitiedostoja, joista voi katsoa mallia halutessaan luoda lisää peliskenaarioita. 
+All documentation related to the project is found in the /docs folder. The source python scripts are all in the same /src folder. Additionall, the /src folder contains subfolders, which store all of the game assets and saves. Currently (24.12.2018) there is only one exapmle save file in the saves folder. 
 
 ### 2. Käyttöohje
 
-Kuvat, joissa on selitetty er UI elementtien toiminta, löytyvät loppuraportin kappaleesta 2.
-Pelin voi käynnistää suorittamalla main.py ohjelma. Tällöin käyttäjälle avautuu dialogi-ikkuna, josta hän voi avata haluamansa peliskenaarion. Pelin pelaaminen etenee seuraavassa järjestyksessä:
+The UI mechanics are shown in the documentation found in the docs folder. Unfortunately all of this documentation is currently in finnish. To play the game run the main.py program. The user is presented with an initial splash screen where it is possible to load saves and run them. After succesfully starting a game, the game progresses as follows. 
 
-- Valittuaan skenaation pelaajan eteen avautuu pelikenttä, jossa hän ja tietokone valitsevat vuorotellen aloitussijaintinsa. Pelaajan aloituspisteet onmerkitty sinisillä portaaleilla, joita klikkaamalla pelaaja valitsee aloituspisteen ruudun alareunassa aktiivisena merkatulle hahmolle. Hahmon aktiivisuusmerkki on  vuorojärjestyksessä valkoinen pallo hahmon ikonin päällä. 
+First the player is presented with a spawning phase where he/she can choose the starting positions for the characters. This is done by clicking on the blue portals on the map. The turn order is the same as the spawning order and it is determined based on the stats of the character and enemies. The white indicator on the turn list shows the active player. Additionally, by clickin on the characters in the turn list, the player can get more information about the clicked character.
 
-- Kun kaikki pelaajat on sijoitettu kentälle, peli alkaa ja hahmot tekevät toimintoja omina vuoroinaan. Graafisen ruudun alareunasta näkee vuorojärjestyksen sekä kullakin hetkellä aktiivisena olevan hahmon. Lisäksi vuorojärjestyksestä näkee nopeasti kaikkien hahmojen elämäpisteet. 
+After spawning all characters, the game begins. All characters have a limited amount of action points (AP) and movement points (MP), which they can use during their turns. On the righth side of these labels are the buttons for ending the turn or attacking. By default, the characters try to move on the battlefield, which is simply done bly clicking the desired destination. 
 
-- Jos pelaaja haluaa saada tietää lisää informaatiota hahmoista, voi vuorojärjestysikoneita klikkaamalla saada lisää informaatiota hahmojen asetukista.
+After clicking an attack button, the player is shown all possible squares, whcih the attack can hit. If the player wants to find out more information about the attacks, they can hover over the buttons in which case a tool tip is displayed. 
 
-- Tämä informaatio tulostuu pelin tekstiruutuun, johon ilmestyy kaikki pelissä tapahtuvat tärkeät asiat. 
-
-- Aktiivisen pelaajan elämä- (HP), toiminto- (AP) ja liikkumispisteet (MP) näkyvät ruudn alareunassa keskellä.
-
-- Pisteiden oikealla puolella on pelaajan mahdolliset toiminnot. Kaikille pelaajille yhteisiä toimntoja ovat liikkuminen (kenkä) sekä vuoron päättäminen (nuoli). Näiden lisäksi jokaisella hahmolla voi olla eri määrä hyökkäyksiä, joita hän voi tehdä. Nämä hyökkäykset on merkitty omilla painikkeillaan. 
-
-- Jos käyttäjä haluaa saada lisää informaatiota hyökkäyksistä tai muista toiminnoista, ilmestyy painikkeiden päälle informaatiolaatikko kun niiden päällä pitää hiirtä hetken. Tämä kertoo hyökkäyksen hinnan, maksimietäisyyden, vahinkolaskelman sekä mahdolliset muut vaikutukset. 
-
-- Hahmon liikuttaminen tapahtuu painamalla liikkumisnappia ja valitsemalla ruutu johon pelaaja haluaa liikkua. Peli näyttää käveltävän reitin, jonka väristä näkee onko hahmolla riittävästä liikkumispisteitä liikkeen toteuttamiseen.
-
-- Hyökkäysnappia painamalla pelikenttään korostetaan hyökkäyksen alue, josta pelaaja voi valita haluamansa kohderuudun.
-
-- Peli päättyy kun kaikki toisen puolen hahmot ovat kuolleet. Tällä hetkellä pelin päättyessä ei ilmesty suurta fanfaaria vaan siitä ilmoitetaan ainoastaan pelin tekstiruudussa. Pelistä poistutaan painamalla ESC nappia pelin päätyttyä.
+The game ends when all characters from one side have lost all of their hitpoints (HP). In this case, the player is sent back to the initial screen where it is possible to play the next game in the sequence or load a new save file. 
 
 
-
-[Other information still in English]
 ### Saves
 
-Currently the path of the game save is set in main.py, which determines all players and game map.
-
-The save file is divided into block which are formed as follows:
+The save file is divided into blocks which are formed as follows:
 
 \#<br/>
-[BLOCK NAME] : ([AI if block is enemy])<br/>
-[PARAM 1] : [VALUE 1]<br/>
-[PARAM 2] : [VALUE 2]<br/>
+[BLOCK NAME] : [possible parameter]<br/>
+[PARAM 1] : [VALUE 1] : [VALUE 2]<br/>
+[PARAM 2] : [VALUE 3]<br/>
 /#<br/>
 
-The save file must atleast include an Information block, which includes a map file name as well as one character. It is however recommended to add at least one player and one enemy to be able to play the game.
-
+The save file must atleast include an Information block, one game, one player and one enemy. An example save is provided in the /src/saves folder
 
 ### Maps
 
 The map files are included in the maps folder. ALl maps must be sved in .bmp for the parser to work.
-In the maps the colors have the following designations:  
-(255,0,0) = Wall  
-(254,0,0) = Rock  
-(253,0,0) = Sandstone  
-(0,0,255) = Enemy spawn point  
-(0,255,0) = Player spawn point  
-(255,255,0) = Out of bounds (water)  
+Additionally, the /src/maps folder includes a maps.txt file, which has all of the relationships between pixel values and objects in the game. The mapping format is as follows:
+
+<br/>
+R: G: B: Blocks vision (0/1): Blocks movement (0/1): icon file name<br/>
+<br/>
+255	: 255	: 255	: 0: 0: NONE<br/>
+255	: 0		: 0		: 1: 1: WALL<br/>
+0	: 255	: 0		: 0: 0: PLAYER_SPAWN<br/>
+<br/>
 
 The colors must have the exact rgb value to be detected and all other colors will be interpreted as ground.
+
+### Enemies
+
+All enemy stats corresponding to their levels are given in the enemy_stats.txt file found in /src/characters. The game will now be able to load enemies with different levels than those defined in this file. The format of the file is: 
+
+\#<br/>
+[ENEMY NAME]<br/>
+[AI TYPE] :  [LEVEL A] : [LEVEL B] : [LEVEL C]<br/>
+[PARAM 1] : [VALUE 1 A] : [VALUE 1 B] : [VALUE 1 C]<br/>
+[PARAM 2] : [VALUE 2 A] : [VALUE 2 B] : [VALUE 2 C]<br/>
+[PARAM 3] : [VALUE 3 A] : [VALUE 3 B] : [VALUE 3 C]<br/>
+/#<br/>
+
+
+
