@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from gui import GUI
+from resultwindow import ResultWindow
 from saveparser import SaveParser
 from exceptions import *
 
@@ -28,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.parser = None
 		self.game_gui = None
+		self.active_game = None
 
 		self.game_index = 0
 		self.num_games = 0
@@ -122,12 +124,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
 	def start_game(self):
 		if self.game_index < self.num_games:
-			game = self.parser.get_game(self.game_index)
+			self.active_game = self.parser.get_game(self.game_index)
 			#Clumsy way to move forward
 			self.game_index += 1
 
 			#Start game
-			self.game_gui = GUI(game)
+			self.game_gui = GUI(self.active_game)
 			self.game_gui.end_signal.connect(self.end_game)
 
 
@@ -139,6 +141,10 @@ class MainWindow(QtWidgets.QMainWindow):
 	def end_game(self):
 
 		self.update_log("Game ended")
+
+		self.ResultWindow = ResultWindow(self.active_game)
+
+		self.active_game = None
 
 	def parse_trigger(self,msg,index=-1):
 

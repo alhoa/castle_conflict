@@ -581,6 +581,7 @@ class GUI(QtWidgets.QMainWindow):
 	#End the game
 	def end_game(self, msg):
 
+		"""
 		if msg[4] == "W":
 			self.update_log("Congratulations, you won!")
 		if msg[4] == "L":
@@ -589,7 +590,11 @@ class GUI(QtWidgets.QMainWindow):
 			self.enemy_timer.timeout.disconnect() #Stop infinite loops in case enemies win
 		self.update_log("Press ESC to exit")
 		self.ended = True
+		"""
+
 		self.end_signal.emit()	
+
+		self.close()
 
 	#Check where the user clicked
 	def mousePressEvent(self, *args, **kwargs):
