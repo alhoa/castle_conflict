@@ -33,14 +33,14 @@ class StatWindow(QtWidgets.QMainWindow):
 		for i in range(6):
 			self.label_group.setColumnMinimumWidth(i, self.WIDTH/6)
 
-		nameval_label = QtWidgets.QLabel(self.char.get_name())
-		self.label_group.addWidget(nameval_label, 0, 0,1,1)
+		self.nameval_label = QtWidgets.QLabel(self.char.get_name())
+		self.label_group.addWidget(self.nameval_label, 0, 0,1,1)
 
-		level_label = QtWidgets.QLabel("Level:")
-		self.label_group.addWidget(level_label, 0,1,1,1)
+		self.level_label = QtWidgets.QLabel("Level:")
+		self.label_group.addWidget(self.level_label, 0,1,1,1)
 
-		level_val_label = QtWidgets.QLabel(str(self.char.get_level()))
-		self.label_group.addWidget(level_val_label,0,2,1,1)
+		self.level_val_label = QtWidgets.QLabel(str(self.char.get_level()))
+		self.label_group.addWidget(self.level_val_label,0,2,1,1)
 
 		no_xp_style = """
 		QProgressBar{
@@ -62,73 +62,56 @@ class StatWindow(QtWidgets.QMainWindow):
 		progress_bar.setValue(self.char.get_stored_xp())
 		self.label_group.addWidget(progress_bar,1,0,1,6)
 
-		ap_label = QtWidgets.QLabel("Total xp:")
-		self.label_group.addWidget(ap_label,0,3,1,1)
+		self.ap_label = QtWidgets.QLabel("Total xp:")
+		self.label_group.addWidget(self.ap_label,0,3,1,1)
 
-		apval_label = QtWidgets.QLabel(str(self.char.get_stored_xp()))
-		self.label_group.addWidget(apval_label,0,4,1,1)
+		self.apval_label = QtWidgets.QLabel(str(self.char.get_stored_xp()))
+		self.label_group.addWidget(self.apval_label,0,4,1,1)
 
-		str_label = QtWidgets.QLabel("Strength:")
-		self.label_group.addWidget(str_label,2,0,1,1)
+		self.str_label = QtWidgets.QLabel("Strength:")
+		self.label_group.addWidget(self.str_label,2,0,1,1)
 
-		strval_label = QtWidgets.QLabel(str(self.char.get_strength()))
-		self.label_group.addWidget(strval_label,2,1,1,1)
+		self.strval_label = QtWidgets.QLabel(str(self.char.get_strength()))
+		self.label_group.addWidget(self.strval_label,2,1,1,1)
 
-		dex_label = QtWidgets.QLabel("Dexterity:")
-		self.label_group.addWidget(dex_label,2,2,1,1)
+		self.dex_label = QtWidgets.QLabel("Dexterity:")
+		self.label_group.addWidget(self.dex_label,2,2,1,1)
 
-		dexval_label = QtWidgets.QLabel(str(self.char.get_dexterity()))
-		self.label_group.addWidget(dexval_label,2,3,1,1)
+		self.dexval_label = QtWidgets.QLabel(str(self.char.get_dexterity()))
+		self.label_group.addWidget(self.dexval_label,2,3,1,1)
 
-		agi_label = QtWidgets.QLabel("Agility:")
-		self.label_group.addWidget(agi_label,2,4,1,1)
+		self.agi_label = QtWidgets.QLabel("Agility:")
+		self.label_group.addWidget(self.agi_label,2,4,1,1)
 
-		agival_label = QtWidgets.QLabel(str(self.char.get_agility()))
-		self.label_group.addWidget(agival_label,2,5,1,1)
+		self.agival_label = QtWidgets.QLabel(str(self.char.get_agility()))
+		self.label_group.addWidget(self.agival_label,2,5,1,1)
 
-		points_label = QtWidgets.QLabel("Stat points available:")
-		self.label_group.addWidget(points_label,4,0,1,2)
+		self.stat_points_label = QtWidgets.QLabel("Stat points available:")
+		self.label_group.addWidget(self.stat_points_label ,4,0,1,2)
 
-		pointval_label = QtWidgets.QLabel(str(self.char.get_stat_points()))
-		self.label_group.addWidget(pointval_label,4,2,1,1)
+		self.stat_val_label = QtWidgets.QLabel(str(self.char.get_stat_points()))
+		self.label_group.addWidget(self.stat_val_label,4,2,1,1)
 
-		points_label = QtWidgets.QLabel("Spell points available:")
-		self.label_group.addWidget(points_label,4,3,1,2)
+		self.spell_points_label = QtWidgets.QLabel("Spell points available:")
+		self.label_group.addWidget(self.spell_points_label,4,3,1,2)
 
-		pointval_label = QtWidgets.QLabel(str(self.char.get_spell_points()))
-		self.label_group.addWidget(pointval_label,4,5,1,1)
+		self.spell_val_label = QtWidgets.QLabel(str(self.char.get_spell_points()))
+		self.label_group.addWidget(self.spell_val_label,4,5,1,1)
 
-		str_up = QtWidgets.QPushButton("+")
-		str_up.setToolTip("Add points to STR")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(str_up, 3, 0, 1, 1)
+		self.str_up = QtWidgets.QPushButton("+")
+		self.str_up.setToolTip("Add points to STR")
+		self.str_up.clicked.connect(self.increase_strength)
+		self.label_group.addWidget(self.str_up, 3, 1, 1, 1)
 
-		str_dn = QtWidgets.QPushButton("-")
-		str_dn.setToolTip("Remove points from STR")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(str_dn, 3, 1, 1, 1)
+		self.dex_up = QtWidgets.QPushButton("+")
+		self.dex_up.setToolTip("Add points to DEX")
+		self.dex_up.clicked.connect(self.increase_dexterity)
+		self.label_group.addWidget(self.dex_up, 3, 3, 1, 1)
 
-		dex_up = QtWidgets.QPushButton("+")
-		dex_up.setToolTip("Add points to DEX")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(dex_up, 3, 2, 1, 1)
-
-		dex_dn = QtWidgets.QPushButton("-")
-		dex_dn.setToolTip("Remove points from DEX")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(dex_dn, 3, 3, 1, 1)
-
-		agi_up = QtWidgets.QPushButton("+")
-		agi_up.setToolTip("Add points to AGI")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(agi_up, 3, 4, 1, 1)
-
-		agi_dn = QtWidgets.QPushButton("-")
-		agi_dn.setToolTip("Remove points from AGI")
-		#start_btn.clicked.connect(lambda: self.increase_strength())
-		self.label_group.addWidget(agi_dn, 3, 5, 1, 1)
-
-
+		self.agi_up = QtWidgets.QPushButton("+")
+		self.agi_up.setToolTip("Add points to AGI")
+		self.agi_up.clicked.connect(self.increase_agility)
+		self.label_group.addWidget(self.agi_up, 3, 5, 1, 1)
 
 		self.label_box = QtWidgets.QGroupBox()
 		self.label_box.setLayout(self.label_group)
@@ -154,3 +137,18 @@ class StatWindow(QtWidgets.QMainWindow):
 
 		if message == "Exit": #Parse contents of message
 			self.close()
+
+	def increase_strength(self):
+		self.char.increase_strength()
+		self.strval_label.setText(str(self.char.get_strength()))
+		self.stat_val_label.setText(str(self.char.get_stat_points()))
+
+	def increase_dexterity(self):
+		self.char.increase_dexterity()
+		self.dexval_label.setText(str(self.char.get_dexterity()))
+		self.stat_val_label.setText(str(self.char.get_stat_points()))
+
+	def increase_agility(self):
+		self.char.increase_agility()
+		self.agival_label.setText(str(self.char.get_agility()))
+		self.stat_val_label.setText(str(self.char.get_stat_points()))

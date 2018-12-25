@@ -36,6 +36,21 @@ class Player(Character):
 	def get_stored_xp(self):
 		return self.stored_xp
 
+	def increase_strength(self):
+		if self.stat_points > 0:
+			self.stat_points -= 1
+			self.strength += 1
+
+	def increase_dexterity(self):
+		if self.stat_points > 0:
+			self.stat_points -= 1
+			self.dexterity += 1
+
+	def increase_agility(self):
+		if self.stat_points > 0:
+			self.stat_points -= 1
+			self.agility += 1
+
 	def is_controllable(self):
 		return self.controllable
 
