@@ -46,7 +46,6 @@ class GUI(QtWidgets.QMainWindow):
 
 		self.moving = None
 		self.hitsplat_visible = False
-		self.ended = False #Turn true when game ends to enable quitting with esc
 	
 		#Timer and settings for displaying hitsplats
 		self.HITSPLAT_SIZE = 30
@@ -581,19 +580,10 @@ class GUI(QtWidgets.QMainWindow):
 	#End the game
 	def end_game(self, msg):
 
-		"""
-		if msg[4] == "W":
-			self.update_log("Congratulations, you won!")
-		if msg[4] == "L":
-			self.update_log("You lost, better luck next time.")
-		#	self.enemy_timer.start(100) #Start timer and immediately stop it to prevent crash in case of suicide
-			self.enemy_timer.timeout.disconnect() #Stop infinite loops in case enemies win
-		self.update_log("Press ESC to exit")
-		self.ended = True
-		"""
-
+		self.timer.disconnect()
+		self.enemy_timer.disconnect()
+		self.enemy_timer.stop()  #Enable force quitting during enemy turns
 		self.end_signal.emit()	
-
 		self.close()
 
 	#Check where the user clicked
@@ -636,10 +626,7 @@ class GUI(QtWidgets.QMainWindow):
 
 
 		if e.key() == QtCore.Qt.Key_Escape:
-			if self.ended:
-				self.close() 	#Close window if game has ended
-			else:
-				self.state = "Move" #Stop actions with escape key
+			self.state = "Move" #Stop actions with escape key
 
 		if e.key() == QtCore.Qt.Key_G:
 			self.parse_trigger("End L")

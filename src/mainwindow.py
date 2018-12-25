@@ -144,6 +144,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.ResultWindow = ResultWindow(self.active_game)
 
+		for player in self.active_game.get_players():
+			player.store_xp()
+			player.set_xp(0)
+			player.set_coordinates(None)
+			player.set_hp(player.get_hp_max())
+			player.set_ap(player.get_ap_max())
+			player.set_mp(player.get_mp_max())
+
 		self.active_game = None
 
 	def parse_trigger(self,msg,index=-1):

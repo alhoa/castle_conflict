@@ -42,22 +42,22 @@ class ResultWindow(QtWidgets.QMainWindow):
 			level_val_label = QtWidgets.QLabel(str(player.get_level()))
 			self.label_group.addWidget(level_val_label,index,2,1,1)
 
-			hp_label = QtWidgets.QLabel("HP:")
+			hp_label = QtWidgets.QLabel("Xp gained:")
 			self.label_group.addWidget(hp_label,index,3,1,1)
 
-			hpval_label = QtWidgets.QLabel(str(player.get_hp()))
+			hpval_label = QtWidgets.QLabel(str(player.get_xp()))
 			self.label_group.addWidget(hpval_label,index,4,1,1)
 
-			ap_label = QtWidgets.QLabel("AP:")
+			ap_label = QtWidgets.QLabel("Total xp:")
 			self.label_group.addWidget(ap_label,index,5,1,1)
 
-			apval_label = QtWidgets.QLabel(str(player.get_ap()))
+			apval_label = QtWidgets.QLabel(str(player.get_xp()+player.get_stored_xp()))
 			self.label_group.addWidget(apval_label,index,6,1,1)
 
-			mp_label = QtWidgets.QLabel("MP:")
+			mp_label = QtWidgets.QLabel("Loot:")
 			self.label_group.addWidget(mp_label,index,7,1,1)
 
-			mpval_label = QtWidgets.QLabel(str(player.get_mp()))
+			mpval_label = QtWidgets.QLabel(str(player.get_hp()))
 			self.label_group.addWidget(mpval_label,index,8,1,1)
 
 			index += 1
