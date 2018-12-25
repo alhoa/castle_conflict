@@ -16,26 +16,31 @@ class StatWindow(QtWidgets.QMainWindow):
 
 		self.char = char
 
-		self.setGeometry(0, 0, 720, 360) #window size
+		self.WIDTH = 360
+
+		self.setGeometry(0, 0, self.WIDTH, 360) #window size
 		#Initialize graphical elements
-		self.init_labels()
-		self.init_buttons()
+		self.init_grid()
+		self.init_exit_button()
 
 		self.show()
 
 
-	def init_labels(self):
+	def init_grid(self):
 
 		self.label_group = QtWidgets.QGridLayout()
 
+		for i in range(6):
+			self.label_group.setColumnMinimumWidth(i, self.WIDTH/6)
+
 		nameval_label = QtWidgets.QLabel(self.char.get_name())
-		self.label_group.addWidget(nameval_label, 1, 0,1,1)
+		self.label_group.addWidget(nameval_label, 0, 0,1,1)
 
 		level_label = QtWidgets.QLabel("Level:")
-		self.label_group.addWidget(level_label, 1,1,1,1)
+		self.label_group.addWidget(level_label, 0,1,1,1)
 
 		level_val_label = QtWidgets.QLabel(str(self.char.get_level()))
-		self.label_group.addWidget(level_val_label,1,2,1,1)
+		self.label_group.addWidget(level_val_label,0,2,1,1)
 
 		no_xp_style = """
 		QProgressBar{
@@ -55,7 +60,7 @@ class StatWindow(QtWidgets.QMainWindow):
 		progress_bar.setRange(0,max_xp)
 		
 		progress_bar.setValue(self.char.get_stored_xp())
-		self.label_group.addWidget(progress_bar,1,3,1,4)
+		self.label_group.addWidget(progress_bar,1,0,1,6)
 
 		ap_label = QtWidgets.QLabel("Total xp:")
 		self.label_group.addWidget(ap_label,0,3,1,1)
@@ -82,10 +87,47 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.label_group.addWidget(agival_label,2,5,1,1)
 
 		points_label = QtWidgets.QLabel("Stat points available:")
-		self.label_group.addWidget(points_label,3,0,1,1)
+		self.label_group.addWidget(points_label,4,0,1,2)
 
 		pointval_label = QtWidgets.QLabel(str(self.char.get_stat_points()))
-		self.label_group.addWidget(pointval_label,3,1,1,1)
+		self.label_group.addWidget(pointval_label,4,2,1,1)
+
+		points_label = QtWidgets.QLabel("Spell points available:")
+		self.label_group.addWidget(points_label,4,3,1,2)
+
+		pointval_label = QtWidgets.QLabel(str(self.char.get_spell_points()))
+		self.label_group.addWidget(pointval_label,4,5,1,1)
+
+		str_up = QtWidgets.QPushButton("+")
+		str_up.setToolTip("Add points to STR")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(str_up, 3, 0, 1, 1)
+
+		str_dn = QtWidgets.QPushButton("-")
+		str_dn.setToolTip("Remove points from STR")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(str_dn, 3, 1, 1, 1)
+
+		dex_up = QtWidgets.QPushButton("+")
+		dex_up.setToolTip("Add points to DEX")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(dex_up, 3, 2, 1, 1)
+
+		dex_dn = QtWidgets.QPushButton("-")
+		dex_dn.setToolTip("Remove points from DEX")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(dex_dn, 3, 3, 1, 1)
+
+		agi_up = QtWidgets.QPushButton("+")
+		agi_up.setToolTip("Add points to AGI")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(agi_up, 3, 4, 1, 1)
+
+		agi_dn = QtWidgets.QPushButton("-")
+		agi_dn.setToolTip("Remove points from AGI")
+		#start_btn.clicked.connect(lambda: self.increase_strength())
+		self.label_group.addWidget(agi_dn, 3, 5, 1, 1)
+
 
 
 		self.label_box = QtWidgets.QGroupBox()
@@ -93,22 +135,15 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.layout.addWidget(self.label_box, 0,0,1,1)
 
 
-	def init_buttons(self):
-
-		self.button_group = QtWidgets.QGridLayout()
+	def init_exit_button(self):
 
 		start_icon = QtGui.QIcon(QtGui.QPixmap("graphics/arrow.png"))
 		start_btn = QtWidgets.QPushButton(start_icon,"")
 		start_btn.setIconSize(QtCore.QSize(50,50))
 		start_btn.setToolTip("Close")
 		start_btn.clicked.connect(lambda: self.parse_trigger("Exit"))
-		self.button_group.addWidget(start_btn, 0,0,1,1)
 
-		self.group_box = QtWidgets.QGroupBox()
-		self.group_box.setLayout(self.button_group)
-		self.layout.addWidget(self.group_box, 1,0,1,1)
-
-	
+		self.layout.addWidget(start_btn, 1,0,1,1)	
 
 	def parse_trigger(self,msg,index=-1):
 
