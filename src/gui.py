@@ -532,8 +532,9 @@ class GUI(QtWidgets.QMainWindow):
 			target = coords[target_index]
 			x = target[0]-current[0]
 			y = target[1]-current[1]
-
+			icon.turn(x,y) #Turns the character adequately
 			self.timer.timeout.connect(lambda: self.move(x,y, icon, 2))
+
 
 	#Animation loop for moving the character
 	def move(self, x,y, item, speed):

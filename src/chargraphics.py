@@ -5,13 +5,12 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 	def __init__(self, x,y,size, character):
 
 
-		path = "characters/{}/icon.png".format(character.get_name().lower())
-		pixmap = QtGui.QPixmap(path) #No need for exeptions, Qpixmap will be white if image isn't found
-		
+		self.path = "characters/{}/iconNE.png".format(character.get_name().lower())
+		pixmap = QtGui.QPixmap(self.path) #No need for exeptions, Qpixmap will be white if image isn't found
+
 		super().__init__(pixmap)
 		self.char = character
 		self.coords = self.char.get_coordinates()
-		self.facing = "right"
 
 		self.height = pixmap.height()
 		#Assuming all icons are square?
@@ -44,6 +43,21 @@ class CharGraphics(QtWidgets.QGraphicsPixmapItem):
 
 	def get_character(self):
 		return self.char
+
+	# Turns the character to face the direction of the last movement
+	def turn(self,x,y):
+		face = 1
+		if x == -1:
+			face = "SW"
+		elif x == 1:
+			face = "NE"
+		elif y == -1:
+			face= "NW"
+		elif y == 1:
+			face= "SE"
+		self.path = "characters/{}/icon{}.png".format(self.char.get_name().lower(),face)
+		pixmap = QtGui.QPixmap(self.path)
+		self.setPixmap(pixmap)
 
 	def get_height(self):
 		return int(self.factor*self.height)

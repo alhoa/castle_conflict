@@ -17,12 +17,18 @@ class Character():
 		self.attacks = [None]*6
 		self.path = []
 		self.animating = False
-		
+		self.face = 1
 
 	def set_game(self, game):
 		self.game = game
 	def get_game(self):
 		return self.games
+
+	def get_face(self):
+		return self.face
+
+	def set_face(self,face):
+		self.face = face
 
 	def get_tile(self):
 		return self.game.get_tile(self.coordinates)
