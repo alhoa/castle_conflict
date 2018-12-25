@@ -41,14 +41,13 @@ class GUI(QtWidgets.QMainWindow):
 		self.TILE_HEIGHT = 26
 		self.TILE_WIDTH = 45
 
+		self.moving = None
+		self.hitsplat_visible = False
 		self.ended = False #Turn true when game ends to enable quitting with esc
 	
 		#Timer and settings for displaying hitsplats
-		self.HITSPLAT_TIME = 1000
 		self.HITSPLAT_SIZE = 30
-		self.hitsplat_timer = QtCore.QTimer()
-		self.hitsplat_timer.setSingleShot(True)
-		self.hitsplat_timer.timeout.connect(self.remove_hitsplats)
+		self.HITSPLAT_COUNTER = 60
 
 		#Initialize graphical elements
 		self.init_window()
@@ -63,7 +62,7 @@ class GUI(QtWidgets.QMainWindow):
 
 		# Update tiles periodically
 		self.timer = QtCore.QTimer()
-		self.timer.timeout.connect(self.update_tiles)
+		self.timer.timeout.connect(self.on_timeout)
 		self.timer.start(16) # around 60fps
 
 	#Setup of the graphical window
@@ -194,9 +193,6 @@ class GUI(QtWidgets.QMainWindow):
 		self.init_buttons()
 		self.update_stats()
 		self.clean_spawns()
-
-		self.timer.timeout.connect(self.check_busy)
-		self.timer.timeout.connect(self.update_layers)
 
 		self.update_log("All characters added")
 
@@ -364,13 +360,24 @@ class GUI(QtWidgets.QMainWindow):
 		hitsplat.setZValue(2000) #Hitsplats on top of everything
 
 		self.scene.addItem(hitsplat)
+		self.hitsplat_visible = True
 
-		self.hitsplat_timer.start(self.HITSPLAT_TIME)
+	#move hitsplats and remove them after counter has reached set value
+	def update_hitsplats(self):
+		#Check if any hitsplats were found
+		found = False
 
-	def remove_hitsplats(self):
 		for item in self.scene.items():
 			if type(item) is HitSplat:
-				self.scene.removeItem(item)
+				found = True
+				item.update_counter()
+
+				if item.get_counter() > self.HITSPLAT_COUNTER:
+					self.scene.removeItem(item)
+				else:
+					item.moveBy(0,-2)
+
+		self.hitsplat_visible = found
 
 	#Check if the character is currently carrying out an action
 	def check_busy(self):
@@ -409,6 +416,18 @@ class GUI(QtWidgets.QMainWindow):
 		elif self.state == "Attack":
 
 			self.highlighted_tiles = self.game.get_current_character().get_attackable_coordinates()
+
+	def on_timeout(self):
+		self.update_tiles() #Always have highlighting connected
+		self.update_layers()
+		self.check_busy()
+
+		if self.moving:
+			self.move(self.moving[0],self.moving[1], self.moving[2], 2)
+
+		if self.hitsplat_visible:
+			self.update_hitsplats()
+
 
 	#Add highlights to relevant tiles
 	def update_tiles(self):
@@ -521,7 +540,6 @@ class GUI(QtWidgets.QMainWindow):
 		if current == coords[-1]:
 			if char.is_controllable(): #Do not return buttons for enemies
 				self.busy = False						 
-			self.timer.timeout.connect(self.check_busy) #Reconnect buttons
 			char.set_animating(False) #Mark that animation has ended
 		else:
 			if current in coords:
@@ -533,8 +551,8 @@ class GUI(QtWidgets.QMainWindow):
 			x = target[0]-current[0]
 			y = target[1]-current[1]
 			icon.turn(x,y) #Turns the character adequately
-			self.timer.timeout.connect(lambda: self.move(x,y, icon, 2))
-
+			
+			self.moving = (x,y, icon)
 
 	#Animation loop for moving the character
 	def move(self, x,y, item, speed):
@@ -549,9 +567,7 @@ class GUI(QtWidgets.QMainWindow):
 			item.moveBy(15*(x+y),8*(y-x))
 			self.walk_counter += 1
 		else:
-			self.timer.timeout.disconnect()
-			self.timer.timeout.connect(self.update_tiles) #Always have highlighting connected
-			self.timer.timeout.connect(self.update_layers)
+			self.moving = False
 			self.walk_counter = 0
 			item.move_coordinates(x,y)
 			self.move_character(item.get_character())
