@@ -120,6 +120,9 @@ class SaveParser(object):
 	def get_loaded_enemies(self):
 		return self.all_enemies
 
+	def get_loaded_players(self):
+		return self.players
+
 	def get_num_games(self):
 		return len(self.games)
 
@@ -130,8 +133,8 @@ class SaveParser(object):
 		characters = []
 
 		#Characters are copies to not preserve their stats or position
-		for player in self.players:
-			characters.append(copy.copy(player))
+		
+		characters.extend(self.players)
 
 		enemies = next_game[1]
 		self.mapname = next_game[0]
@@ -229,10 +232,6 @@ class SaveParser(object):
 			else:
 				return
 
-	def save_save(self, path):
-		pass
-
-	
 	#Determine map contents based on pixel value
 	def determine_tile(self,pix_val):
 		
