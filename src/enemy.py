@@ -74,6 +74,9 @@ class Enemy(Character):
 
 		#Attack target if possible
 		if targetpos in attackable_coords:
+
+			self.game.gui.get_character_graphics(self).turn(1, 1)
+
 			self.ap -= attack.get_cost()
 			dmg = attack.calculate_damage()
 

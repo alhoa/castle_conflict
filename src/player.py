@@ -39,6 +39,8 @@ class Player(Character):
 		if target in self.attackable_coords:
 			char = self.game.get_tile(target).get_character()
 			self.ap -= self.active_attack.get_cost()
+
+			self.game.gui.get_character_graphics(self).turn(1, 1)
 			if char:
 				dmg = self.active_attack.calculate_damage()
 				char.set_hp(char.get_hp()-dmg)
