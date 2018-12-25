@@ -268,3 +268,19 @@ class MainWindow(QtWidgets.QMainWindow):
 			self.stat_window.close()
 
 		self.stat_window = StatWindow(char)
+
+
+	def closeEvent(self, *args, **kwargs):
+
+		#Close all windows when mainwindow is closed
+		if self.stat_window:
+			self.stat_window.close()
+
+		if self.inv_window:
+			self.inv_window.close()
+
+		if self.game_gui:
+			self.game_gui.close()
+
+		super().closeEvent(*args, **kwargs)
+
