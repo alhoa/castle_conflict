@@ -1,3 +1,5 @@
+from PyQt5 import QtCore #To emit signals
+
 from tile import Tile
 import random
 

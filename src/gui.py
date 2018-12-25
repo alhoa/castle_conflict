@@ -12,6 +12,9 @@ import random
 
 class GUI(QtWidgets.QMainWindow):
 
+	#Signal has to be outside constructor
+	end_signal = QtCore.pyqtSignal()
+
 	def __init__(self, game):
 		super().__init__()
 		
@@ -492,6 +495,9 @@ class GUI(QtWidgets.QMainWindow):
 			self.state = message
 			self.game.get_current_character().choose_target(index)
 
+		elif message[0:3] == "End":
+			self.end_game(msg)
+
 		else:
 			self.update_log(message)
 
@@ -574,7 +580,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	#End the game
 	def end_game(self, msg):
-		
+
 		if msg[4] == "W":
 			self.update_log("Congratulations, you won!")
 		if msg[4] == "L":
@@ -583,6 +589,7 @@ class GUI(QtWidgets.QMainWindow):
 			self.enemy_timer.timeout.disconnect() #Stop infinite loops in case enemies win
 		self.update_log("Press ESC to exit")
 		self.ended = True
+		self.end_signal.emit()	
 
 	#Check where the user clicked
 	def mousePressEvent(self, *args, **kwargs):
@@ -630,7 +637,7 @@ class GUI(QtWidgets.QMainWindow):
 				self.state = "Move" #Stop actions with escape key
 
 		if e.key() == QtCore.Qt.Key_G:
-			self.close()
+			self.parse_trigger("End L")
 
 		#Hotkeys only work when buttons work and game is initialised
 		if (not self.busy) and self.game.get_initialized():

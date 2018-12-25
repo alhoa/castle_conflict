@@ -27,6 +27,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.init_buttons()
 
 		self.parser = None
+		self.game_gui = None
 
 		self.game_index = 0
 		self.num_games = 0
@@ -126,12 +127,18 @@ class MainWindow(QtWidgets.QMainWindow):
 			self.game_index += 1
 
 			#Start game
-			self.gui = GUI(game)
+			self.game_gui = GUI(game)
+			self.game_gui.end_signal.connect(self.end_game)
+
+
 		elif self.parser == None:
 			self.update_log("No save loaded")
 		else:
 			self.update_log("Not enough games loaded")
 
+	def end_game(self):
+
+		self.update_log("Game ended")
 
 	def parse_trigger(self,msg,index=-1):
 
