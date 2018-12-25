@@ -12,14 +12,24 @@ class Player(Character):
 		self.xp = 0
 		self.stored_xp = 0
 
-		#stats
-		self.strength = 0
-		self.dexterity = 0
+		#Points to unock stuff with
+		self.spell_points = 0
+		self.stat_points = 0
 
 	def get_xp(self):
 		return self.xp
 	def set_xp(self, val):
 		self.xp = val
+
+	def get_stat_points(self):
+		return self.stat_points
+	def set_stat_points(self, val):
+		self.stat_points = val
+
+	def get_spell_points(self):
+		return self.spell_points
+	def set_spell_points(self, val):
+		self.spell_points = val
 
 	def store_xp(self):
 		self.stored_xp += self.xp
@@ -63,7 +73,7 @@ class Player(Character):
 
 			if char:
 				dmg = self.active_attack.calculate_damage()
-				self.xp += dmg #Temporary xp system, allows farming with teammates
+				self.add_xp(dmg*5)#Temporary xp system, allows farming with teammates
 				char.set_hp(char.get_hp()-dmg)
 				self.parse_attack_effect(self.active_attack, char)
 				self.game.gui.update_log("{} attacked {} with {} for {} damage!".format(self.name, char.get_name(), self.active_attack.get_name(), str(dmg)))
@@ -76,3 +86,21 @@ class Player(Character):
 
 		self.game.update_game()
 		self.cancel_attack()
+
+	def add_xp(self, val):
+		self.xp += val
+
+		required_xp = int(100*(1.1**self.level))
+		#Check if leveled up
+		if (self.xp+self.stored_xp)>=required_xp:
+			self.xp = self.xp+self.stored_xp-required_xp
+			self.stored_xp = 0
+
+			self.level += 1
+			self.stat_points += 5
+			self.spell_points += 1
+
+			self.game.gui.update_log("{} gained a level!".format(self.name))
+
+			
+

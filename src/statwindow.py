@@ -37,12 +37,6 @@ class StatWindow(QtWidgets.QMainWindow):
 		level_val_label = QtWidgets.QLabel(str(self.char.get_level()))
 		self.label_group.addWidget(level_val_label,1,2,1,1)
 
-		hp_label = QtWidgets.QLabel("Xp gained:")
-		self.label_group.addWidget(hp_label,0,3,1,1)
-
-		hpval_label = QtWidgets.QLabel(str(self.char.get_xp()))
-		self.label_group.addWidget(hpval_label,0,4,1,1)
-
 		no_xp_style = """
 		QProgressBar{
 			border: 1px solid grey;
@@ -64,16 +58,34 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.label_group.addWidget(progress_bar,1,3,1,4)
 
 		ap_label = QtWidgets.QLabel("Total xp:")
-		self.label_group.addWidget(ap_label,0,5,1,1)
+		self.label_group.addWidget(ap_label,0,3,1,1)
 
 		apval_label = QtWidgets.QLabel(str(self.char.get_stored_xp()))
-		self.label_group.addWidget(apval_label,0,6,1,1)
+		self.label_group.addWidget(apval_label,0,4,1,1)
 
-		mp_label = QtWidgets.QLabel("Loot:")
-		self.label_group.addWidget(mp_label,1,7,1,1)
+		str_label = QtWidgets.QLabel("Strength:")
+		self.label_group.addWidget(str_label,2,0,1,1)
 
-		mpval_label = QtWidgets.QLabel(str(self.char.get_hp()))
-		self.label_group.addWidget(mpval_label,1,8,1,1)
+		strval_label = QtWidgets.QLabel(str(self.char.get_strength()))
+		self.label_group.addWidget(strval_label,2,1,1,1)
+
+		dex_label = QtWidgets.QLabel("Dexterity:")
+		self.label_group.addWidget(dex_label,2,2,1,1)
+
+		dexval_label = QtWidgets.QLabel(str(self.char.get_dexterity()))
+		self.label_group.addWidget(dexval_label,2,3,1,1)
+
+		agi_label = QtWidgets.QLabel("Agility:")
+		self.label_group.addWidget(agi_label,2,4,1,1)
+
+		agival_label = QtWidgets.QLabel(str(self.char.get_agility()))
+		self.label_group.addWidget(agival_label,2,5,1,1)
+
+		points_label = QtWidgets.QLabel("Stat points available:")
+		self.label_group.addWidget(points_label,3,0,1,1)
+
+		pointval_label = QtWidgets.QLabel(str(self.char.get_stat_points()))
+		self.label_group.addWidget(pointval_label,3,1,1,1)
 
 
 		self.label_box = QtWidgets.QGroupBox()

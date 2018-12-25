@@ -19,6 +19,12 @@ class Character():
 		self.animating = False
 		self.face = 1
 
+		#stats
+		self.strength = 0     #Damage output
+		self.dexterity = 0	  #Hit probability
+		self.agility = 0	  #Evade chance
+
+
 	def set_game(self, game):
 		self.game = game
 	def get_game(self):
@@ -127,51 +133,59 @@ class Character():
 
 	def get_initiative(self):
 		return self.initiative
-
 	def set_initiative(self, initiative):
 		self.initiative = initiative
 
+	def get_name(self):
+		return self.name
 	def set_name(self, name):
 		self.name = name
 
-	def get_name(self):
-		return self.name
 
 	def get_hp(self):
 		return self.hp
-
-	def get_ap(self):
-		return self.ap
-
-	def get_mp(self):
-		return self.mp
-
-	def get_hp_max(self):
-		return self.hp_max
-
-	def get_ap_max(self):
-		return self.ap_max
-
-	def get_mp_max(self):
-		return self.mp_max
-
 	def set_hp(self, hp):
 		self.hp = hp
 
+	def get_ap(self):
+		return self.ap
 	def set_ap(self, ap):
 		self.ap = ap
 
+	def get_mp(self):
+		return self.mp
 	def set_mp(self, mp):
 		self.mp = mp
 
+	def get_hp_max(self):
+		return self.hp_max
 	def set_hp_max(self, hp):
 		self.hp_max = hp
 
+	def get_ap_max(self):
+		return self.ap_max
 	def set_ap_max(self, ap):
 		self.ap_max = ap
 
+	def get_mp_max(self):
+		return self.mp_max
 	def set_mp_max(self, mp):
 		self.mp_max = mp
+
+	def get_strength(self):
+		return self.strength
+	def set_strength(self, val):
+		self.strength = val
+	
+	def get_dexterity(self):
+		return self.dexterity
+	def set_dexterity(self, val):
+		self.dexterity = val
+
+	def get_agility(self):
+		return self.agility
+	def set_agility(self, val):
+		self.agility = val
 
 	def change_hp(self,val):
 		self.hp += val

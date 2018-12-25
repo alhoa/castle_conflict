@@ -333,6 +333,15 @@ class SaveParser(object):
 		elif key == 'init':
 			character.set_initiative(int(content[1+level]))
 
+		elif key == 'strength':
+			character.set_strength(int(content[1+level]))
+
+		elif key == 'dexterity':
+			character.set_dexterity(int(content[1+level]))
+
+		elif key == 'agility':
+			character.set_agility(int(content[1+level]))
+
 		#Level affects available attacks
 		elif key == 'level':
 			character.set_level(int(content[1+level]))

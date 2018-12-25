@@ -43,6 +43,9 @@ name : Makke
 hp : 80
 ap : 7
 mp : 4
+strength : 1
+dexterity : 2
+agility : 3
 init : 100
 level : 3
 attack : punch
@@ -57,6 +60,9 @@ name : Mikko
 hp : 70
 ap : 8
 mp : 3
+strength : 4
+dexterity : 5
+agility : 6
 init : 120
 level : 2
 attack : punch
