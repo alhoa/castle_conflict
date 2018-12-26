@@ -18,6 +18,9 @@ class SaveParser(object):
 		self.save_comments = None
 		self.map_path = None
 		self.tile_map = dict() #key = (R,G,B), value = (content, graphic)
+		self.all_enemies = dict() #key = (name, level), value = Enemy
+		self.attacks = dict() #key = name, value = Attack
+
 		self.game_index = 0
 
 		#list all games and choose one to be loaded based on the game index
@@ -27,9 +30,16 @@ class SaveParser(object):
 		self.enemies = []
 		self.players = []
 
-		#Read all enemy types into memory
-		self.all_enemies = dict()
+		#Read all attacks into memory
+		#Find attacks  in character folder
+		for file in os.listdir("attacks"):
+			if file.endswith(".txt"):
+				parts = file.split(".")
 
+				attack = self.parse_attack("attacks/{}".format(file))
+				self.attacks[parts[0].lower()] = attack
+
+		#Read all enemy types into memory
 		try:
 			enemy_stats = open("characters/enemy_stats.txt")
 
@@ -94,8 +104,6 @@ class SaveParser(object):
 		finally:
 			if enemy_stats:
 				enemy_stats.close()
-			else:
-				return
 
 		#Read map initialisation file to match pixel values and properties
 		try:
@@ -114,8 +122,7 @@ class SaveParser(object):
 		finally:
 			if map_map:
 				map_map.close()
-			else:
-				return
+				
 
 	def get_loaded_enemies(self):
 		return self.all_enemies
@@ -125,6 +132,9 @@ class SaveParser(object):
 
 	def get_num_games(self):
 		return len(self.games)
+
+	def get_attacks(self):
+		return self.attacks
 
 	def get_game(self, index):
 		#Load next game
@@ -347,7 +357,7 @@ class SaveParser(object):
 			character.set_level(int(content[1+level]))
 
 		elif key == 'attack':
-			attack = self.parse_attack("attacks/{}.txt".format(content[1+level]))
+			attack = self.attacks[content[1+level].lower()]
 			character.add_attack(attack)
 
 	def parse_enemy_type(self, line):

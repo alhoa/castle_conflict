@@ -267,7 +267,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		if self.stat_window:
 			self.stat_window.close()
 
-		self.stat_window = StatWindow(char)
+		self.stat_window = StatWindow(char, self.parser.get_attacks())
 
 
 	def closeEvent(self, *args, **kwargs):

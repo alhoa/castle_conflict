@@ -7,7 +7,7 @@ import random
 
 class StatWindow(QtWidgets.QMainWindow):
 
-	def __init__(self, char):
+	def __init__(self, char, attacks):
 		super().__init__()
 		
 		self.setCentralWidget(QtWidgets.QWidget()) # QMainWindown must have a centralWidget to be able to add layouts
@@ -15,6 +15,7 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.centralWidget().setLayout(self.layout)
 
 		self.char = char
+		self.attacks = attacks
 
 		self.WIDTH = 360
 
@@ -22,6 +23,7 @@ class StatWindow(QtWidgets.QMainWindow):
 		#Initialize graphical elements
 		self.init_grid()
 		self.init_exit_button()
+		self.init_attack_buttons()
 
 		self.show()
 
@@ -118,6 +120,37 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.layout.addWidget(self.label_box, 0,0,1,1)
 
 
+	def init_attack_buttons(self):
+
+		self.button_group = QtWidgets.QGridLayout()
+
+		x = 0
+		y = 0
+
+		for key in self.attacks:
+			name = self.attacks[key].get_name().lower().replace(" ", "_")
+			path = "attacks/{}.png".format(name)
+			icon = QtGui.QIcon(QtGui.QPixmap(path))
+			btn = QtWidgets.QPushButton(icon,"")
+			btn.setIconSize(QtCore.QSize(50,50))
+			btn.setToolTip(str(self.attacks[key]))
+
+			#Only press buttons that the character does not have
+			if self.attacks[key] in self.char.get_attacks():
+				btn.setEnabled(False)
+			
+			btn.clicked.connect(lambda state, x=key: self.unlock_attack(x))
+			self.button_group.addWidget(btn, y, x, 1, 1)
+
+			x += 1
+			if x > 6:
+				x = 0
+				y += 1
+
+		self.group_box = QtWidgets.QGroupBox()
+		self.group_box.setLayout(self.button_group)
+		self.layout.addWidget(self.group_box, 1,0,1,1)
+
 	def init_exit_button(self):
 
 		start_icon = QtGui.QIcon(QtGui.QPixmap("graphics/arrow.png"))
@@ -126,7 +159,7 @@ class StatWindow(QtWidgets.QMainWindow):
 		start_btn.setToolTip("Close")
 		start_btn.clicked.connect(lambda: self.parse_trigger("Exit"))
 
-		self.layout.addWidget(start_btn, 1,0,1,1)	
+		self.layout.addWidget(start_btn, 2,0,1,1)	
 
 	def parse_trigger(self,msg,index=-1):
 
@@ -152,3 +185,6 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.char.increase_agility()
 		self.agival_label.setText(str(self.char.get_agility()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
+
+	def unlock_attack(self, key):
+		pass
