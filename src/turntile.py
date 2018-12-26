@@ -52,3 +52,4 @@ class TurnTile(QtWidgets.QGraphicsItemGroup):
 	def mousePressEvent(self, *args, **kwargs):
 		if self.isUnderMouse():
 			self.gui.update_log(str(self.character))
+			self.gui.point_at(self.character)

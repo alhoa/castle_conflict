@@ -57,6 +57,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.init_grid()
 		self.init_turnlist()
 		self.init_objects()
+		self.init_pointer()
 
 		#Start spawning characters
 		self.update_log("Select starting points for characters")
@@ -239,6 +240,15 @@ class GUI(QtWidgets.QMainWindow):
 		self.label_box.setLayout(self.label_group)
 		self.layout.addWidget(self.label_box, 1,1,1,1)
 
+	#initialize arrow to point at characters
+	def init_pointer(self):
+		pixmap = QtGui.QPixmap("graphics/down_arrow.png")
+		self.pointer = QtWidgets.QGraphicsPixmapItem(pixmap)
+		self.pointer.setScale(0.03) #Experimental value
+		self.pointer_counter = 0
+		self.pointer_counter_max = 30 #0.5s 
+		self.pointer.setZValue(2001) #Above hitsplats
+
 	#Create attack button group
 	def init_buttons(self):
 
@@ -377,6 +387,27 @@ class GUI(QtWidgets.QMainWindow):
 		self.scene.addItem(hitsplat)
 		self.hitsplat_visible = True
 
+	def point_at(self, character):
+		coords = character.get_coordinates()
+		if coords:
+			position = self.get_coordinate_position(coords)
+
+			xpos = position[0] + self.TILE_WIDTH - 16 #From image size and scale factor
+			ypos = position[1] - self.TILE_HEIGHT -80 #Visually ok
+
+			self.pointer.setPos(xpos, ypos)
+
+			self.scene.addItem(self.pointer)
+
+	def update_pointer(self):
+		if self.pointer in self.scene.items():
+			self.pointer.moveBy(0,3)
+			self.pointer_counter += 1
+			if self.pointer_counter > self.pointer_counter_max:
+				self.scene.removeItem(self.pointer)
+				self.pointer_counter = 0
+
+
 	#move hitsplats and remove them after counter has reached set value
 	def update_hitsplats(self):
 		#Check if any hitsplats were found
@@ -425,6 +456,7 @@ class GUI(QtWidgets.QMainWindow):
 
 		if self.game.get_initialized():
 			self.update_buttons()
+			self.update_pointer()
 
 		if self.moving:
 			self.move(self.moving[0],self.moving[1], self.moving[2], 2)

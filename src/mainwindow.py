@@ -87,7 +87,6 @@ class MainWindow(QtWidgets.QMainWindow):
 		shift = 0
 		self.info_group = QtWidgets.QGridLayout()
 
-
 		column_width = self.WINDOW_WIDTH/8
 
 		for i in range(8):
@@ -134,7 +133,6 @@ class MainWindow(QtWidgets.QMainWindow):
 		group_box = QtWidgets.QGroupBox()
 		group_box.setLayout(self.info_group)
 		self.layout.addWidget(group_box, 1, 0, 1, 2)
-
 
 	#setup log printing box
 	def init_log(self):
