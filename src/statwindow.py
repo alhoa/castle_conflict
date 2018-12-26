@@ -7,6 +7,8 @@ import random
 
 class StatWindow(QtWidgets.QMainWindow):
 
+	update_signal = QtCore.pyqtSignal()
+
 	def __init__(self, char, attacks):
 		super().__init__()
 		
@@ -175,16 +177,19 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.char.increase_strength()
 		self.strval_label.setText(str(self.char.get_strength()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
+		self.update_signal.emit()
 
 	def increase_dexterity(self):
 		self.char.increase_dexterity()
 		self.dexval_label.setText(str(self.char.get_dexterity()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
+		self.update_signal.emit()
 
 	def increase_agility(self):
 		self.char.increase_agility()
 		self.agival_label.setText(str(self.char.get_agility()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
+		self.update_signal.emit()
 
 	def unlock_attack(self, key):
 		if self.char.get_spell_points() > 0:

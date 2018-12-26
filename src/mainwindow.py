@@ -41,6 +41,8 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.stat_window = None
 		self.players = []
 
+		self.labels = dict()
+
 		self.game_index = 0
 		self.num_games = 0
 
@@ -94,29 +96,39 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		for player in self.players:
 
+			self.labels[player] = []
+
 			name_label = QtWidgets.QLabel(player.get_name())
+			self.labels[player].append(name_label)
 			self.info_group.addWidget(name_label, 0,shift,1,1)
 
 			level_label = QtWidgets.QLabel(str(player.get_level()))
+			self.labels[player].append(level_label)
 			self.info_group.addWidget(level_label, 0,shift+1,1,1)
 
 			hp_label = QtWidgets.QLabel("HP:")
+			self.labels[player].append(hp_label)
 			self.info_group.addWidget(hp_label, 1,shift,1,1)
 
 			hpval_label = QtWidgets.QLabel(str(player.get_hp()))
+			self.labels[player].append(hpval_label)
 			self.info_group.addWidget(hpval_label, 1,shift+1,1,1)
 
 			ap_label = QtWidgets.QLabel("AP:")
+			self.labels[player].append(ap_label)
 			self.info_group.addWidget(ap_label, 2,shift,1,1)
 
 			apval_label = QtWidgets.QLabel(str(player.get_ap()))
+			self.labels[player].append(apval_label)
 			self.info_group.addWidget(apval_label, 2,shift+1,1,1)
 
 			mp_label = QtWidgets.QLabel("MP:")
+			self.labels[player].append(mp_label)
 			self.info_group.addWidget(mp_label, 3,shift,1,1)
 
-			apval_label = QtWidgets.QLabel(str(player.get_mp()))
-			self.info_group.addWidget(apval_label, 3,shift+1,1,1)
+			mpval_label = QtWidgets.QLabel(str(player.get_mp()))
+			self.labels[player].append(mpval_label)
+			self.info_group.addWidget(mpval_label, 3,shift+1,1,1)
 
 			inv_btn = QtWidgets.QPushButton("Inventory")
 			inv_btn.setToolTip("Open inventory")
@@ -133,6 +145,15 @@ class MainWindow(QtWidgets.QMainWindow):
 		group_box = QtWidgets.QGroupBox()
 		group_box.setLayout(self.info_group)
 		self.layout.addWidget(group_box, 1, 0, 1, 2)
+
+	def update_labels(self):
+
+		for player in self.players:
+			self.labels[player][1].setText(str(player.get_level()))
+			self.labels[player][3].setText(str(player.get_hp()))
+			self.labels[player][5].setText(str(player.get_ap()))
+			self.labels[player][7].setText(str(player.get_mp()))
+
 
 	#setup log printing box
 	def init_log(self):
@@ -231,6 +252,8 @@ class MainWindow(QtWidgets.QMainWindow):
 			player.set_ap(player.get_ap_max())
 			player.set_mp(player.get_mp_max())
 
+		self.update_labels()
+
 		self.active_game = None
 
 	def parse_trigger(self,msg,index=-1):
@@ -259,6 +282,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			self.inv_window.close()
 
 		self.inv_window = ItemWindow(char)
+		self.inv_window.update_signal.connect(self.update_labels)
 
 	def show_stats(self, char):
 		#Close previous window
@@ -266,6 +290,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			self.stat_window.close()
 
 		self.stat_window = StatWindow(char, self.parser.get_attacks())
+		self.stat_window.update_signal.connect(self.update_labels)
 
 
 	def closeEvent(self, *args, **kwargs):

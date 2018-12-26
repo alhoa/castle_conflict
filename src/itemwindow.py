@@ -7,6 +7,8 @@ import random
 
 class ItemWindow(QtWidgets.QMainWindow):
 
+	update_signal = QtCore.pyqtSignal()
+
 	def __init__(self, char):
 		super().__init__()
 		
