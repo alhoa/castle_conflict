@@ -56,7 +56,7 @@ class StatWindow(QtWidgets.QMainWindow):
 		}
 		"""
 
-		max_xp = 100 #Value for next level
+		max_xp = self.char.get_xp_for_next_lvl()#Value for next level
 		progress_bar = QtWidgets.QProgressBar()
 		progress_bar.setStyleSheet(no_xp_style)
 		progress_bar.setRange(0,max_xp)

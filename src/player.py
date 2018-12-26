@@ -36,6 +36,9 @@ class Player(Character):
 	def get_stored_xp(self):
 		return self.stored_xp
 
+	def get_xp_for_next_lvl(self):
+		return int(100*(1.1**self.level))
+
 	def increase_strength(self):
 		if self.stat_points > 0:
 			self.stat_points -= 1
@@ -105,7 +108,7 @@ class Player(Character):
 	def add_xp(self, val):
 		self.xp += val
 
-		required_xp = int(100*(1.1**self.level))
+		required_xp = self.get_xp_for_next_lvl()
 		#Check if leveled up
 		if (self.xp+self.stored_xp)>=required_xp:
 			self.xp = self.xp+self.stored_xp-required_xp

@@ -72,7 +72,7 @@ class ResultWindow(QtWidgets.QMainWindow):
 			}
 			"""
 
-			max_xp = 100 #Value for next level
+			max_xp = player.get_xp_for_next_lvl() #Value for next level
 
 
 			progress_bar = QtWidgets.QProgressBar()
