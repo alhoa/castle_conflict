@@ -1,5 +1,6 @@
 import random
-#kommentti
+from PyQt5 import QtGui
+
 class Attack:
 	def __init__(self, name, cost,  max_range, damage, effect):
 		self.name = str(name)
@@ -9,6 +10,8 @@ class Attack:
 		self.los = True      #Range modifier to be added
 		self.linear = False	 #Range modifier to be added
 		self.effect = effect
+		self.path = "attacks/{}.png".format(name.lower().replace(" ", "_"))
+		self.icon = QtGui.QIcon(QtGui.QPixmap(self.path))
 
 	def get_name(self):
 		return self.name
@@ -24,6 +27,9 @@ class Attack:
 
 	def get_effect(self):
 		return self.effect
+
+	def get_icon(self):
+		return self.icon
 		
 	def calculate_damage(self):
 		dmg = self.damage[0] + random.randint(0,self.damage[1])
