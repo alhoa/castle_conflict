@@ -211,6 +211,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		save_path = fname[0]
 
+		if save_path == "":
+			return
+
 		try:
 			self.parser.read_save(save_path)
 
