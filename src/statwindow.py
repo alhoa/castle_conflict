@@ -187,4 +187,8 @@ class StatWindow(QtWidgets.QMainWindow):
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
 
 	def unlock_attack(self, key):
-		pass
+		if self.char.get_spell_points() > 0:
+			self.char.set_spell_points(self.char.get_spell_points()-1)
+			self.char.add_attack(self.attacks[key])
+			self.spell_val_label.setText(str(self.char.get_spell_points()))
+			self.init_attack_buttons()
