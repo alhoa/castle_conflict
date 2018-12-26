@@ -39,21 +39,6 @@ class Player(Character):
 	def get_xp_for_next_lvl(self):
 		return int(100*(1.1**self.level))
 
-	def increase_strength(self):
-		if self.stat_points > 0:
-			self.stat_points -= 1
-			self.strength += 1
-
-	def increase_dexterity(self):
-		if self.stat_points > 0:
-			self.stat_points -= 1
-			self.dexterity += 1
-
-	def increase_agility(self):
-		if self.stat_points > 0:
-			self.stat_points -= 1
-			self.agility += 1
-
 	def is_controllable(self):
 		return self.controllable
 
@@ -121,4 +106,40 @@ class Player(Character):
 			self.game.gui.update_log("{} gained a level!".format(self.name))
 
 			
+	def increase_strength(self):
+		if self.stat_points >= 1:
+			self.stat_points -= 1
+			self.strength += 1
 
+	def increase_dexterity(self):
+		if self.stat_points >= 1:
+			self.stat_points -= 1
+			self.dexterity += 1
+
+	def increase_agility(self):
+		if self.stat_points >= 1:
+			self.stat_points -= 1
+			self.agility += 1
+
+	def increase_hp(self):
+		if self.stat_points >= 1:
+			self.stat_points -= 1
+			self.hp_max += 1
+			self.hp = self.hp_max
+
+	def increase_ap(self):
+		if self.stat_points >= 10:
+			self.stat_points -= 10
+			self.ap_max += 1
+			self.ap = self.ap_max
+
+	def increase_mp(self):
+		if self.stat_points >= 10:
+			self.stat_points -= 10
+			self.mp_max += 1
+			self.mp = self.mp_max
+
+	def increase_initiative(self):
+		if self.stat_points >= 1:
+			self.stat_points -= 1
+			self.initiative += 5

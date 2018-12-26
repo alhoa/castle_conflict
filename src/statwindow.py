@@ -132,7 +132,7 @@ cost: 10"""
 
 		self.init_up = QtWidgets.QPushButton("+")
 		tip = """Add points to initiative
-cost: 1"""
+cost: 0.2"""
 		self.init_up.setToolTip(tip)
 		self.init_up.clicked.connect(self.increase_init)
 		self.stat_group.addWidget(self.init_up, 3, 2, 1, 1)
@@ -250,26 +250,26 @@ cost: 1"""
 		self.update_signal.emit()
 
 	def increase_hp(self):
-		self.char.increase_agility()
-		self.agival_label.setText(str(self.char.get_agility()))
+		self.char.increase_hp()
+		self.hpval_label.setText(str(self.char.get_hp()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
 		self.update_signal.emit()
 
 	def increase_ap(self):
-		self.char.increase_agility()
-		self.agival_label.setText(str(self.char.get_agility()))
+		self.char.increase_ap()
+		self.apval_label.setText(str(self.char.get_ap()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
 		self.update_signal.emit()
 
 	def increase_mp(self):
-		self.char.increase_agility()
-		self.agival_label.setText(str(self.char.get_agility()))
+		self.char.increase_mp()
+		self.mpval_label.setText(str(self.char.get_mp()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
 		self.update_signal.emit()
 
 	def increase_init(self):
-		self.char.increase_agility()
-		self.agival_label.setText(str(self.char.get_agility()))
+		self.char.increase_initiative()
+		self.initval_label.setText(str(self.char.get_initiative()))
 		self.stat_val_label.setText(str(self.char.get_stat_points()))
 		self.update_signal.emit()
 
