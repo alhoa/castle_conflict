@@ -273,6 +273,9 @@ class GUI(QtWidgets.QMainWindow):
 		self.group_box.setLayout(self.button_group)
 		self.layout.addWidget(self.group_box, 1,2,1,1)
 
+		#load bloking icon only once
+		self.block_icon = QtGui.QIcon(QtGui.QPixmap("graphics/block.png"))
+
 	#Update stats at every significant event, not every frame
 	def update_stats(self):
 		self.highlight_current()
@@ -332,18 +335,28 @@ class GUI(QtWidgets.QMainWindow):
 		char = self.game.get_current_character()
 		attacks = char.get_attacks()
 
-		index = 0 
+		index = 0
+
+		self.buttons[0].setEnabled(not self.busy) 
 
 		for attack in attacks:
 			index += 1 #First button can't be changed
 			if attack:
-				name = attack.get_name().lower().replace(" ", "_")
-				path = "attacks/{}.png".format(name)
-				icon = QtGui.QIcon(QtGui.QPixmap(path))
 				self.buttons[index].setToolTip(str(attack))
+				icon = attack.get_icon()
+
+				#Deactivate button if the player does not have enough ap
+
+				if attack.get_cost() > char.get_ap():
+					self.buttons[index].setEnabled(False)
+				else:
+					self.buttons[index].setEnabled(not self.busy)
+
 			else:
-				icon = QtGui.QIcon(QtGui.QPixmap("graphics/block.png"))
+				icon = self.block_icon
 				self.buttons[index].setToolTip("You do not have this attack")
+				self.buttons[index].setEnabled(False)
+
 			self.buttons[index].setIcon(icon)
 
 	#Add hitsplat with timer
@@ -381,19 +394,6 @@ class GUI(QtWidgets.QMainWindow):
 
 		self.hitsplat_visible = found
 
-	#Check if the character is currently carrying out an action
-	def check_busy(self):
-		if self.busy:
-			value = False
-		else:
-			value = True
-
-		for button in self.buttons:
-			if button.toolTip() == "You do not have this attack":
-				button.setEnabled(False)
-			else:
-				button.setEnabled(value)
-
 	#List all isometric tile objects
 	def get_tilegraphs(self):
 		items = []
@@ -422,7 +422,9 @@ class GUI(QtWidgets.QMainWindow):
 	def on_timeout(self):
 		self.update_tiles() #Always have highlighting connected
 		self.update_layers()
-		self.check_busy()
+
+		if self.game.get_initialized():
+			self.update_buttons()
 
 		if self.moving:
 			self.move(self.moving[0],self.moving[1], self.moving[2], 2)
