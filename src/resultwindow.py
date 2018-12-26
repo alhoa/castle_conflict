@@ -7,14 +7,14 @@ import random
 
 class ResultWindow(QtWidgets.QMainWindow):
 
-	def __init__(self, game):
+	def __init__(self, players):
 		super().__init__()
 		
 		self.setCentralWidget(QtWidgets.QWidget()) # QMainWindown must have a centralWidget to be able to add layouts
 		self.layout = QtWidgets.QGridLayout() #Use grid layout
 		self.centralWidget().setLayout(self.layout)
 
-		self.game = game
+		self.players = players
 
 		self.setGeometry(0, 0, 720, 360) #window size
 		#Initialize graphical elements
@@ -31,7 +31,7 @@ class ResultWindow(QtWidgets.QMainWindow):
 
 		index = 0
 
-		for player in self.game.get_players():
+		for player in self.players:
 
 			nameval_label = QtWidgets.QLabel(player.get_name())
 			self.label_group.addWidget(nameval_label, index+1, 0,1,1)

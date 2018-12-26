@@ -242,7 +242,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.update_log("Game ended")
 
-		self.ResultWindow = ResultWindow(self.active_game)
+		self.ResultWindow = ResultWindow(self.players)
 
 		for player in self.players:
 			player.store_xp()
