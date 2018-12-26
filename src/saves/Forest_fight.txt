@@ -1,0 +1,71 @@
+CC save
+
+#
+Information
+
+index : 0
+
+/#
+
+#
+Comments
+
+The order of games matters in the file
+/#
+
+#
+game
+map : forest1
+Enemy : spider : 1
+Enemy : spider : 1
+Enemy : spider : 2
+Enemy : spider : 3
+
+/#
+
+#
+game
+map : forest2
+Enemy : skeleton : 1
+Enemy : skeleton : 1
+Enemy : skeleton : 1
+Enemy : skeleton : 2
+
+/#
+
+#
+game
+map : forest1
+Enemy : skeleton : 1
+Enemy : spider : 1
+Enemy : shade : 1
+/#
+
+#
+Player
+name : Makke
+hp : 80
+ap : 7
+mp : 4
+strength : 1
+dexterity : 1
+agility : 1
+init : 100
+level : 0
+attack : punch
+attack : magic_missile
+/#
+
+#
+Player
+name : Mikko
+hp : 70
+ap : 8
+mp : 3
+strength : 1
+dexterity : 1
+agility : 1
+init : 120
+level : 0
+attack : punch
+/#
