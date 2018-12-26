@@ -39,6 +39,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.inv_window = None
 		self.stat_window = None
+		self.result_window = None
+
 		self.players = []
 
 		self.labels = dict()
@@ -242,7 +244,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		self.update_log("Game ended")
 
-		self.ResultWindow = ResultWindow(self.players)
+		self.result_window = ResultWindow(self.players)
 
 		for player in self.players:
 			player.store_xp()
@@ -304,6 +306,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 		if self.game_gui:
 			self.game_gui.close()
+
+		if self.result_window:
+			self.result_window.close()
 
 		super().closeEvent(*args, **kwargs)
 

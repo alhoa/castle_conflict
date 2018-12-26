@@ -35,7 +35,7 @@ Enemy : skeleton : 2
 
 #
 game
-map : forest1
+map : forest3
 Enemy : skeleton : 1
 Enemy : spider : 1
 Enemy : shade : 1
